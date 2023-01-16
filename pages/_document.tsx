@@ -1,18 +1,23 @@
 import * as React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import createEmotionServer from "@emotion/server/create-instance";
-
-import createEmotionCache from "../utils/createEmotionCache";
+import theme from "../src/theme";
+import createEmotionCache from "../src/createEmotionCache";
+import NavigationBar from "../components/NavigationBar";
+import { Toolbar } from "@mui/material";
 
 export default class MyDocument extends Document {
   render() {
     return (
       <Html lang="en">
         <Head>
+          <meta name="theme-color" content={theme.palette.primary.main} />
+          <link rel="shortcut icon" href="/favicon.ico" />
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
+          {(this.props as any).emotionStyleTags}
         </Head>
         <body>
           <Main />
@@ -64,6 +69,7 @@ MyDocument.getInitialProps = async (ctx) => {
   /* eslint-enable */
 
   const initialProps = await Document.getInitialProps(ctx);
+
   // This is important. It prevents emotion to render invalid HTML.
   // See https://github.com/mui-org/material-ui/issues/26561#issuecomment-855286153
   const emotionStyles = extractCriticalToChunks(initialProps.html);
