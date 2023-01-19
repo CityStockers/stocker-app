@@ -14,7 +14,7 @@ type TradeProps = {
 const Home: FC<TradeProps> = () => {
   return (
     <Box>
-      <Typography>홈화면</Typography>
+      <Typography>이곳에 다양한 정보를 적을 예정</Typography>
     </Box>
   );
 };
