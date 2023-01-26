@@ -1,7 +1,10 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import React, { FC, ReactNode } from "react";
 import { getExchangeInfo } from "../../api/binanceAPI";
 import { useQuery } from "react-query";
+import { url } from "inspector";
+import TradeCoinCard from "../../components/Trade/TradeCoinCard";
+import { coinList } from "../../constant/CoinData";
 type TradeProps = {
   children?: ReactNode;
 };
@@ -15,7 +18,7 @@ type TradeProps = {
 const Trade: FC<TradeProps> = () => {
   const exchangeInfoData = useQuery(
     "exchangeInfo",
-    () => getExchangeInfo("BNBUSDT"),
+    () => getExchangeInfo("ehtusdt"),
     {
       onSuccess(data) {
         console.log(data);
@@ -23,8 +26,31 @@ const Trade: FC<TradeProps> = () => {
     }
   );
   return (
-    <Box>
-      <Typography>트레이드 코인들 보여주기</Typography>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <Grid
+        container
+        rowSpacing={1}
+        columns={{ xs: 1, sm: 2, md: 2 }}
+        sx={{ display: "flex", justifyContent: "center" }}
+      >
+        {coinList.map((item, index) => {
+          return (
+            <Grid item xs="auto" key={index}>
+              <TradeCoinCard
+                symbol={item.symbol}
+                code={item.code}
+                name={item.name}
+              />
+            </Grid>
+          );
+        })}
+      </Grid>
     </Box>
   );
 };
