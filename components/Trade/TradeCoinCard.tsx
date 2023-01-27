@@ -36,10 +36,9 @@ const TradeCoinCard = ({ symbol, code, name }: TradeCoinCardProps) => {
         justifyContent: "center",
         alignItems: "center",
       }}
-      width={{ xs: 300 }}
     >
       <Button onClick={() => router.push(`/trade/${symbol}`)}>
-        <Card variant="outlined" sx={{ minWidth: 280 }}>
+        <Card variant="outlined" sx={{ minWidth: 250 }}>
           <CardContent
             sx={{
               display: "flex",

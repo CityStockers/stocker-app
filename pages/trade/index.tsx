@@ -36,12 +36,12 @@ const Trade: FC<TradeProps> = () => {
       <Grid
         container
         rowSpacing={1}
-        columns={{ xs: 1, sm: 2, md: 2 }}
+        columns={{ xs: 1, sm: 2 }}
         sx={{ display: "flex", justifyContent: "center" }}
       >
         {coinList.map((item, index) => {
           return (
-            <Grid item xs="auto" key={index}>
+            <Grid item xs={1} key={index}>
               <TradeCoinCard
                 symbol={item.symbol}
                 code={item.code}
