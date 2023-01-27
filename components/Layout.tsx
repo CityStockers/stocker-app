@@ -10,7 +10,18 @@ type LayoutProp = {
 
 const Layout = ({ children }: LayoutProp) => {
   return (
-    <Container maxWidth="md">
+    <Container
+      sx={{
+        minWidth: {
+          xs: 300,
+          sm: 600,
+        },
+        maxWidth: {
+          xs: 350,
+          sm: 600,
+        },
+      }}
+    >
       <NavigationBar />
       <Toolbar />
       {children}

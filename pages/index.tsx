@@ -3,7 +3,6 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Link from "../src/Link";
-import Copyright from "../src/Copyright";
 import NavigationBar from "../components/NavigationBar";
 import { Button } from "@mui/material";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
@@ -18,7 +17,7 @@ export default function Home() {
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
+        const token = credential?.accessToken;
 
         // The signed-in user info.
         const user = result.user;

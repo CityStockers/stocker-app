@@ -5,7 +5,8 @@ import { DUMMY_BNB_PRICE } from "../../constant/CoinData";
 import Chart from "chart.js/auto";
 import { Line } from "react-chartjs-2";
 import { CategoryScale } from "chart.js";
-import { borderColor } from "@mui/system";
+import AccountInfo from "../../components/AccountInfo";
+import CoinInfo from "../../components/CoinInfo";
 Chart.register(CategoryScale);
 
 type TradeSymbolProps = {
@@ -100,7 +101,14 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
         </Box>
       </Box>
 
-      <Box sx={{ height: "60vw" }}>
+      <Box
+        sx={{
+          maxHeight: {
+            xs: 400 * 0.6,
+            sm: 600,
+          },
+        }}
+      >
         <Line data={data} options={options} />
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <Box
@@ -108,7 +116,7 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
               display: "flex",
               justifyContent: "space-around",
               alignItems: "center",
-              width: 250,
+              width: 300,
             }}
           >
             <Button
@@ -159,87 +167,9 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
           alignItems: "center",
         }}
       >
-        <Box
-          sx={{
-            paddingX: 2,
-            paddingY: 2,
-            backgroundColor: "#FAF9FF",
-            width: 300,
-            borderRadius: 4,
-            border: "1px solid #DFDFDF",
-          }}
-        >
-          <Typography variant="h6" fontWeight={600}>
-            Account
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography>Savings</Typography>
-            <Typography>$10000</Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography>Profit</Typography>
-            <Typography color={"red"}>$90 (2.8%)</Typography>
-          </Box>
-        </Box>
-        <Box
-          sx={{
-            paddingX: 2,
-            paddingY: 2,
-            backgroundColor: "#FAF9FF",
-            width: 300,
-            borderRadius: 4,
-            border: "1px solid #DFDFDF",
-            marginTop: 2,
-          }}
-        >
-          <Typography variant="h6" fontWeight={600}>
-            {symbol} Stock
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography>Owned Stocks</Typography>
-            <Typography>3</Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography>Average price per stock</Typography>
-            <Typography>$230</Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography>Stock Profit</Typography>
-            <Typography color="blue">-$80 (3.6%)</Typography>
-          </Box>
-        </Box>
-
-        <Box maxWidth={300}>
+        <AccountInfo />
+        <CoinInfo symbol={symbol} />
+        <Box maxWidth={300} sx={{ marginY: 2 }}>
           <Button
             variant="outlined"
             size="large"
@@ -258,16 +188,17 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
           >
             sell
           </Button>
-        </Box>
-        <Box sx={{ marginTop: 1 }}>
-          <Button
-            variant="outlined"
-            size="large"
-            sx={{ width: 288 }}
-            color="secondary"
-          >
-            Auto
-          </Button>
+
+          <Box sx={{ marginTop: 1 }}>
+            <Button
+              variant="outlined"
+              size="large"
+              sx={{ width: 288 }}
+              color="secondary"
+            >
+              Auto
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Box>
