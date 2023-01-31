@@ -9,15 +9,17 @@ import {
 import React, { FC, ReactNode } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { Account } from "../stocker-core/sdk/Types/Account";
 
 type AccountInfoProps = {
   children?: ReactNode;
+  accountInfo: Account;
 };
 
 /**
  * 함수 설명
  */
-const AccountInfo = ({}: AccountInfoProps) => {
+const AccountInfo = ({ accountInfo }: AccountInfoProps) => {
   //   const result = getCoinIcon(code);
   const router = useRouter();
   return (
@@ -43,7 +45,7 @@ const AccountInfo = ({}: AccountInfoProps) => {
         }}
       >
         <Typography>Savings</Typography>
-        <Typography>$10000</Typography>
+        <Typography>${accountInfo.wallets[0].amount}</Typography>
       </Box>
       <Box
         sx={{

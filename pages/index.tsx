@@ -8,10 +8,14 @@ import { Button } from "@mui/material";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { useRouter } from "next/router";
+import { useRecoilState } from "recoil";
+import { recoilUserId } from "../states";
+import Cookies from "js-cookie";
 
 export default function Home() {
   const router = useRouter();
   const googleAuth = new GoogleAuthProvider();
+  const [userId, setUserId] = useRecoilState(recoilUserId);
   const login = async () => {
     const result = await signInWithPopup(auth, googleAuth)
       .then((result) => {
@@ -23,7 +27,9 @@ export default function Home() {
         const user = result.user;
 
         // ...
-        console.log(token, user);
+        console.log(user.uid);
+        setUserId(user.uid);
+        Cookies.set("userId", user.uid);
         router.push("./home");
       })
       .catch((error) => {

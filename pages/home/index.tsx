@@ -4,6 +4,10 @@ import AccountInfo from "../../components/AccountInfo";
 import Chart from "chart.js/auto";
 import { Doughnut } from "react-chartjs-2";
 import { CategoryScale } from "chart.js";
+import useAccount from "../../stocker-core/sdk/Account/useAccount";
+import { db } from "../../utils/firebase";
+import { useRecoilValue } from "recoil";
+import { recoilUserId } from "../../states";
 Chart.register(CategoryScale);
 
 type TradeProps = {
@@ -17,6 +21,14 @@ type TradeProps = {
  * @returns 리턴 설명
  */
 const Home: FC<TradeProps> = () => {
+  const userId = useRecoilValue(recoilUserId);
+  const accountInfo = useAccount(db, userId);
+  if (accountInfo.loading) {
+    return <div>loading...</div>;
+  }
+  if (accountInfo.error) {
+    return <div>error...</div>;
+  }
   return (
     <Box
       sx={{
@@ -25,7 +37,7 @@ const Home: FC<TradeProps> = () => {
         flexDirection: "column",
       }}
     >
-      <Typography>Hello, User123!</Typography>
+      <Typography>{accountInfo.account?.userID}</Typography>
 
       <Box
         sx={{
@@ -72,7 +84,7 @@ const Home: FC<TradeProps> = () => {
             <Typography>ETH 2300</Typography>
           </Box>
         </Box>
-        <AccountInfo />
+        <AccountInfo accountInfo={accountInfo.account} />
       </Box>
 
       <Box sx={{ width: "100%" }}>

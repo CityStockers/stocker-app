@@ -10,6 +10,7 @@ import "../styles/globals.css";
 import Head from "next/head";
 import NavigationBar from "../components/NavigationBar";
 import Layout from "../components/Layout";
+import { RecoilRoot } from "recoil";
 
 const clientSideEmotionCache = createEmotionCache();
 const queryClient = new QueryClient();
@@ -33,17 +34,22 @@ const MyApp = (props: MyAppProps) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <CacheProvider value={emotionCache}>
-        <Head>
-          <meta name="viewport" content="initial-scale=1, width=device-width" />
-        </Head>
-        <ThemeProvider theme={lightTheme}>
-          <CssBaseline />
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </ThemeProvider>
-      </CacheProvider>
+      <RecoilRoot>
+        <CacheProvider value={emotionCache}>
+          <Head>
+            <meta
+              name="viewport"
+              content="initial-scale=1, width=device-width"
+            />
+          </Head>
+          <ThemeProvider theme={lightTheme}>
+            <CssBaseline />
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </ThemeProvider>
+        </CacheProvider>
+      </RecoilRoot>
     </QueryClientProvider>
   );
 };

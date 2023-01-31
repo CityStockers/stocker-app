@@ -24,8 +24,8 @@ interface Props {
 }
 
 const drawerWidth = 280;
-const navItems = ["home", "trade"];
-const MappingRoute = { home: "Home", trade: "Trade" };
+const navItems = ["home", "trade", "auto"];
+const MappingRoute = { home: "Home", trade: "Trade", auto: "Auto" };
 
 export default function NavigationBar(props: Props) {
   const { window } = props;
@@ -61,8 +61,8 @@ export default function NavigationBar(props: Props) {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar component="nav">
-        <Toolbar>
+      <AppBar component="nav" sx={{ display: "flex", alignItems: "center" }}>
+        <Toolbar sx={{ maxWidth: 600, width: "100%" }}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -79,11 +79,15 @@ export default function NavigationBar(props: Props) {
           >
             CityStockers
           </Typography>
-          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+          <Box sx={{ display: { xs: "none", sm: "flex" } }}>
             {navItems.map((item) => (
-              <Button key={item} sx={{ color: "#fff" }}>
-                {item}
-              </Button>
+              <Link href={`/${item}`} key={item}>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemText primary={MappingRoute[item]} />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
             ))}
           </Box>
         </Toolbar>
