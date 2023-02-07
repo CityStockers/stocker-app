@@ -13,7 +13,7 @@ import { Account } from "../stocker-core/sdk/Types/Account";
 
 type AccountInfoProps = {
   children?: ReactNode;
-  accountInfo: Account;
+  accountInfo: Account | null;
 };
 
 /**
@@ -45,7 +45,7 @@ const AccountInfo = ({ accountInfo }: AccountInfoProps) => {
         }}
       >
         <Typography>Savings</Typography>
-        <Typography>${accountInfo.wallets[0].amount}</Typography>
+        <Typography>${accountInfo?.wallets[0].amount}</Typography>
       </Box>
       <Box
         sx={{

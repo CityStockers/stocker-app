@@ -7,6 +7,10 @@ import { Line } from "react-chartjs-2";
 import { CategoryScale } from "chart.js";
 import AccountInfo from "../../components/AccountInfo";
 import CoinInfo from "../../components/CoinInfo";
+import useAccount from "../../stocker-core/sdk/Account/useAccount";
+import { db } from "../../utils/firebase";
+import { recoilUserId } from "../../states";
+import { useRecoilValue } from "recoil";
 Chart.register(CategoryScale);
 
 type TradeSymbolProps = {
@@ -23,7 +27,8 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
   const router = useRouter();
   const symbol = router.query.symbol;
   const [price, setPrice] = useState(0);
-
+  const userId = useRecoilValue(recoilUserId);
+  const accountInfo = useAccount(db, userId);
   const processPriceList = () => {
     const resultData: number[] = [];
     DUMMY_BNB_PRICE.forEach((element) => {
@@ -167,7 +172,7 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
           alignItems: "center",
         }}
       >
-        <AccountInfo />
+        <AccountInfo accountInfo={accountInfo.account} />
         <CoinInfo symbol={symbol} />
         <Box maxWidth={300} sx={{ marginY: 2 }}>
           <Button
