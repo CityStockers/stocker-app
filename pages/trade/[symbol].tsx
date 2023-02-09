@@ -11,6 +11,8 @@ import useAccount from "../../stocker-core/sdk/Account/useAccount";
 import { db } from "../../utils/firebase";
 import { recoilUserId } from "../../states";
 import { useRecoilValue } from "recoil";
+import { useQuery } from "react-query";
+import { getPriceList } from "../../api/binanceAPI";
 Chart.register(CategoryScale);
 
 type TradeSymbolProps = {
@@ -27,27 +29,11 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
   const router = useRouter();
   const symbol = router.query.symbol;
   const [price, setPrice] = useState(0);
+  const [interval, setInterval] = useState("1d");
   const userId = useRecoilValue(recoilUserId);
   const accountInfo = useAccount(db, userId);
-  const processPriceList = () => {
-    const resultData: number[] = [];
-    DUMMY_BNB_PRICE.forEach((element) => {
-      resultData.push(Number(element[4]));
-    });
 
-    return resultData;
-  };
-
-  const data = {
-    labels: Array(78).fill("날짜"),
-    datasets: [
-      {
-        data: processPriceList(),
-      },
-    ],
-  };
-
-  const options = {
+  let options = {
     elements: {
       point: {
         radius: 1.5,
@@ -60,31 +46,49 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
     },
     scales: {
       x: { grid: { display: false, drawTicks: false }, display: false },
-      y: {
-        grid: { display: false },
-        display: false,
-        min: Math.min(...processPriceList()) - 1,
-        max: Math.max(...processPriceList()) + 1,
-        stepSize: 1,
-      },
+      y: { grid: { display: false }, display: false },
     },
   };
 
-  console.log(price, symbol);
+  const priceListData = useQuery(
+    ["priceList", symbol, interval],
+    () => getPriceList(symbol as string, interval),
+    {
+      onSuccess(data) {
+        console.log(data);
+      },
+    }
+  );
+
+  const data = {
+    labels: Array(100).fill("날짜"),
+    datasets: [
+      {
+        data: priceListData.data,
+      },
+    ],
+  };
 
   useEffect(() => {
-    let ws = new WebSocket(`wss://stream.binance.com:9443/ws/${symbol}@trade`);
-    ws.onmessage = (event) => {
-      console.log(event.data);
-      let stockObject = JSON.parse(event.data);
-      setPrice(stockObject.p);
-    };
+    if (typeof symbol === "string") {
+      let ws = new WebSocket(
+        `wss://stream.binance.com:9443/ws/${symbol.toLowerCase()}@trade`
+      );
+      ws.onmessage = (event) => {
+        let stockObject = JSON.parse(event.data);
+        setPrice(stockObject.p);
+      };
 
-    return () => {
-      ws.close();
-    };
+      return () => {
+        ws.close();
+      };
+    }
   }, [symbol]);
-  processPriceList();
+
+  if (priceListData.isLoading) {
+    return <Typography>isLoading...</Typography>;
+  }
+
   return (
     <Box>
       <Box sx={{ marginTop: 3 }}>
@@ -96,10 +100,10 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
           }}
         >
           <Typography sx={{ marginRight: 1 }}>
-            {(Math.round(price * 100) / 100).toFixed(2)}
+            {(Math.round(price * 100) / 100).toFixed(5)}
           </Typography>
           <Typography>
-            {(Math.round((processPriceList()[0] - price) * 100) / 100).toFixed(
+            {(Math.round((priceListData.data[0] - price) * 100) / 100).toFixed(
               2
             )}
           </Typography>

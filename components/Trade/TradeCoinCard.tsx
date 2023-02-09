@@ -12,6 +12,8 @@ import Image from "next/image";
 import coin from "../../asset/coinIcons/btc.svg";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
+import { useQuery } from "react-query";
+import { getPrice } from "../../api/binanceAPI";
 
 type TradeCoinCardProps = {
   children?: ReactNode;
@@ -29,6 +31,11 @@ type TradeCoinCardProps = {
 const TradeCoinCard = ({ symbol, code, name }: TradeCoinCardProps) => {
   //   const result = getCoinIcon(code);
   const router = useRouter();
+  const exchangeInfoData = useQuery(["price", symbol], () => getPrice(symbol), {
+    onSuccess(data) {
+      console.log(data);
+    },
+  });
   return (
     <Box
       sx={{
@@ -60,6 +67,21 @@ const TradeCoinCard = ({ symbol, code, name }: TradeCoinCardProps) => {
                 sx={{ marginLeft: 1 }}
               >
                 {name}
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexDirection: "row",
+              }}
+            >
+              <Typography variant="subtitle2" sx={{ marginRight: 2 }}>
+                price
+              </Typography>
+              <Typography variant="subtitle2">
+                {exchangeInfoData.data?.price}
               </Typography>
             </Box>
           </CardContent>
