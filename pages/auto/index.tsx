@@ -17,9 +17,14 @@ type TradeProps = {
   children?: ReactNode;
 };
 
-const code = `//Code your Auto Algorithm!
-\n console.log('Hello! City Stockers!');
-`;
+const code = `import { SDK } from "../types";
+
+//Code your Auto Algorithm!
+function userTrade(sdk: SDK) {
+ console.log('Hello! City Stockers!');
+}
+
+export default userTrade;`;
 
 /**
  * 함수 설명
@@ -45,12 +50,20 @@ const Auto: FC<TradeProps> = () => {
     editorRef.current = editor;
   }
   function handleEditorWillMount(monaco: Monaco) {
+    monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+      target: monaco.languages.typescript.ScriptTarget.ES2016,
+      allowNonTsExtensions: true,
+      moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+      module: monaco.languages.typescript.ModuleKind.CommonJS,
+      noEmit: true,
+      typeRoots: ["node_modules/@types"],
+    });
+    monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true);
+    monaco.languages.typescript.typescriptDefaults.addExtraLib(
+      `export declare function next() : string`,
+      "file:///node_modules/types/"
+    );
     console.log({ monaco });
-  }
-
-  function showValue() {
-    alert(editorRef.current.getValue());
-    console.log(editorRef.current.getValue());
   }
 
   async function submitCode(symbol: string, code: string) {
