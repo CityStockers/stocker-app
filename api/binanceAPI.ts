@@ -1,10 +1,18 @@
 import axios from "axios";
-const baseUrl = "https://api.binance.com";
+const baseUrl = "http://localhost:3002";
 
-export const getExchangeInfo = async (symbol?: string) => {
-  const { data } = await axios.get(`${baseUrl}/api/v3/exchangeInfo`, {
+export const getPrice = async (symbol: string) => {
+  const { data } = await axios.get(`${baseUrl}/quote/crypto/${symbol}`, {
     params: { symbol: symbol },
   });
+
+  return data;
+};
+
+export const getPriceList = async (symbol: string, interval: string) => {
+  const { data } = await axios.get(
+    `${baseUrl}/pricelist/crypto/${symbol}/${interval}`
+  );
 
   return data;
 };
