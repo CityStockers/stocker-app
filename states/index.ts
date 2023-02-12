@@ -2,5 +2,5 @@ import { atom } from "recoil";
 
 export const recoilUserId = atom<string>({
   key: "userId",
-  default: "",
+  default: "0",
 });

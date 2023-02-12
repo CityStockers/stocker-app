@@ -1,8 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
 import React, { FC, ReactNode } from "react";
-import { getExchangeInfo } from "../../api/binanceAPI";
-import { useQuery } from "react-query";
-import { url } from "inspector";
 import TradeCoinCard from "../../components/Trade/TradeCoinCard";
 import { coinList } from "../../constant/CoinData";
 type TradeProps = {
