@@ -27,10 +27,7 @@ const AccountInfo = ({ accountInfo }: AccountInfoProps) => {
       sx={{
         paddingX: 2,
         paddingY: 2,
-        backgroundColor: "#FAF9FF",
         width: "100%",
-        borderRadius: 4,
-        border: "1px solid #DFDFDF",
         marginY: 1,
       }}
     >
