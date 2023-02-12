@@ -13,6 +13,8 @@ import { recoilUserId } from "../../states";
 import { useRecoilValue } from "recoil";
 import { useQuery } from "react-query";
 import { getPriceList } from "../../api/binanceAPI";
+import BuyCoin from "../../components/Trade/BuyCoin";
+import SellCoin from "../../components/Trade/SellCoin";
 Chart.register(CategoryScale);
 
 type TradeSymbolProps = {
@@ -32,7 +34,8 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
   const [interval, setInterval] = useState("1d");
   const userId = useRecoilValue(recoilUserId);
   const accountInfo = useAccount(db, userId);
-
+  const [openBuy, setOpenBuy] = useState(false);
+  const [openSell, setOpenSell] = useState(false);
   let options = {
     elements: {
       point: {
@@ -186,10 +189,16 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
               width: 140,
               marginRight: 1,
             }}
+            onClick={() => {
+              setOpenBuy(true);
+            }}
           >
             buy
           </Button>
           <Button
+            onClick={() => {
+              setOpenSell(true);
+            }}
             variant="outlined"
             size="large"
             sx={{ width: 140 }}
@@ -197,19 +206,10 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
           >
             sell
           </Button>
-
-          <Box sx={{ marginTop: 1 }}>
-            <Button
-              variant="outlined"
-              size="large"
-              sx={{ width: 288 }}
-              color="secondary"
-            >
-              Auto
-            </Button>
-          </Box>
         </Box>
       </Box>
+      <BuyCoin price={price} open={openBuy} setOpen={setOpenBuy} />
+      <SellCoin price={price} open={openSell} setOpen={setOpenSell} />
     </Box>
   );
 };
