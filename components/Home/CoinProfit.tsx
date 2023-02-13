@@ -21,7 +21,7 @@ type WalletInfoProps = {
 /**
  */
 const CoinProfit = ({ walletInfo }: WalletInfoProps) => {
-  const exchangeInfoData = useQuery(
+  const priceData = useQuery(
     ["price", walletInfo.symbol],
     () => getPrice(walletInfo.symbol),
     {
@@ -39,6 +39,9 @@ const CoinProfit = ({ walletInfo }: WalletInfoProps) => {
   };
   //   const result = getCoinIcon(code);
   const router = useRouter();
+  if (priceData.isLoading) {
+    return <Typography>Loading Profit...</Typography>;
+  }
   return (
     <Box
       sx={{
@@ -50,10 +53,10 @@ const CoinProfit = ({ walletInfo }: WalletInfoProps) => {
       <Typography>{walletInfo.symbol}</Typography>
       <Typography
         color={
-          calculateProfit(exchangeInfoData.data) < 0 ? "#CF3049" : "#04A56D"
+          calculateProfit(priceData.data.price) < 0 ? "#CF3049" : "#04A56D"
         }
       >
-        {calculateProfit(exchangeInfoData.data)}
+        ${calculateProfit(priceData.data.price).toFixed(2)}
       </Typography>
     </Box>
   );
