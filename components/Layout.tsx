@@ -32,6 +32,7 @@ const Layout = ({ children }: LayoutProp) => {
       <NavigationBar />
       <Toolbar />
       {children}
+      <Copyright />
     </Container>
   );
 };
