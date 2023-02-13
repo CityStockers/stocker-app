@@ -25,8 +25,6 @@ const AccountInfo = ({ accountInfo }: AccountInfoProps) => {
   return (
     <Box
       sx={{
-        paddingX: 2,
-        paddingY: 2,
         width: "100%",
         marginY: 1,
       }}
@@ -41,18 +39,8 @@ const AccountInfo = ({ accountInfo }: AccountInfoProps) => {
           alignItems: "center",
         }}
       >
-        <Typography>Savings</Typography>
+        <Typography>USD Savings</Typography>
         <Typography>${accountInfo?.wallets[0].amount}</Typography>
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Typography>Profit</Typography>
-        <Typography color={"red"}>$90 (2.8%)</Typography>
       </Box>
     </Box>
   );

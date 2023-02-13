@@ -2,32 +2,31 @@ import { Box, Typography } from "@mui/material";
 import React, { FC, ReactNode } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { Wallet } from "../stocker-core/sdk/Types/Account";
 
 type CoinInfoProps = {
   children?: ReactNode;
   symbol: any;
+  wallet: Wallet;
 };
 
 /**
  * 함수 설명
  */
-const CoinInfo = ({ symbol }: CoinInfoProps) => {
+const CoinInfo = ({ symbol, wallet }: CoinInfoProps) => {
   //   const result = getCoinIcon(code);
   const router = useRouter();
+
   return (
     <Box
       sx={{
-        paddingX: 2,
-        paddingY: 2,
-        backgroundColor: "#FAF9FF",
         width: "100%",
         borderRadius: 4,
-        border: "1px solid #DFDFDF",
         marginY: 1,
       }}
     >
       <Typography variant="h6" fontWeight={600}>
-        {symbol} Stock
+        {symbol}
       </Typography>
       <Box
         sx={{
@@ -36,8 +35,8 @@ const CoinInfo = ({ symbol }: CoinInfoProps) => {
           alignItems: "center",
         }}
       >
-        <Typography>Owned Stocks</Typography>
-        <Typography>3</Typography>
+        <Typography>Owned Coin</Typography>
+        <Typography>{wallet ? wallet.amount : 0}</Typography>
       </Box>
       <Box
         sx={{
@@ -46,8 +45,8 @@ const CoinInfo = ({ symbol }: CoinInfoProps) => {
           alignItems: "center",
         }}
       >
-        <Typography>Average price per stock</Typography>
-        <Typography>$230</Typography>
+        <Typography>Average price</Typography>
+        <Typography>${wallet ? wallet.avgPrice : 0}</Typography>
       </Box>
       <Box
         sx={{

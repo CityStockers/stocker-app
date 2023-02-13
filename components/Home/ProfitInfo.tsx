@@ -10,7 +10,7 @@ import React, { FC, ReactNode } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { Account } from "../../stocker-core/sdk/Types/Account";
-import CoinProfit from "./coinProfit";
+import CoinProfit from "./CoinProfit";
 
 type AccountInfoProps = {
   children?: ReactNode;
@@ -30,6 +30,7 @@ const ProfitInfo = ({ accountInfo }: AccountInfoProps) => {
         paddingY: 2,
         width: "100%",
         marginY: 1,
+        borderTop: "solid 1px #DFDFDF",
       }}
     >
       <Typography variant="h6" fontWeight={600}>
@@ -44,7 +45,7 @@ const ProfitInfo = ({ accountInfo }: AccountInfoProps) => {
               minHeight: 100,
             }}
           >
-            <Typography>
+            <Typography color={"#AAAAAA"}>
               You have no Coin in the wallet, Start the Trade in Trade Page!
             </Typography>
           </Box>
