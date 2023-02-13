@@ -1,7 +1,7 @@
 import { Box, Button, Typography, withStyles } from "@mui/material";
 import React, { FC, ReactNode, use, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { DUMMY_BNB_PRICE } from "../../constant/CoinData";
+import { getCoinName } from "../../constant/CoinData";
 import Chart from "chart.js/auto";
 import { Line } from "react-chartjs-2";
 import { CategoryScale } from "chart.js";
@@ -15,6 +15,7 @@ import { useQuery } from "react-query";
 import { getPriceList } from "../../api/binanceAPI";
 import BuyCoin from "../../components/Trade/BuyCoin";
 import SellCoin from "../../components/Trade/SellCoin";
+import { Wallet } from "../../stocker-core/sdk/Types/Account";
 Chart.register(CategoryScale);
 
 type TradeSymbolProps = {
@@ -30,12 +31,24 @@ type TradeSymbolProps = {
 const TradeSymbol: FC<TradeSymbolProps> = () => {
   const router = useRouter();
   const symbol = router.query.symbol;
+
   const [price, setPrice] = useState(0);
   const [interval, setInterval] = useState("1d");
   const userId = useRecoilValue(recoilUserId);
   const accountInfo = useAccount(db, userId);
   const [openBuy, setOpenBuy] = useState(false);
   const [openSell, setOpenSell] = useState(false);
+  const [indexOfWallet, setIndexOfWallet] = useState(-1);
+  const priceListData = useQuery(
+    ["priceList", symbol, interval],
+    () => getPriceList(symbol as string, interval),
+    {
+      onSuccess(data) {
+        console.log(data);
+      },
+    }
+  );
+
   let options = {
     elements: {
       point: {
@@ -52,16 +65,6 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
       y: { grid: { display: false }, display: false },
     },
   };
-
-  const priceListData = useQuery(
-    ["priceList", symbol, interval],
-    () => getPriceList(symbol as string, interval),
-    {
-      onSuccess(data) {
-        console.log(data);
-      },
-    }
-  );
 
   const data = {
     labels: Array(100).fill("날짜"),
@@ -88,27 +91,48 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
     }
   }, [symbol]);
 
-  if (priceListData.isLoading) {
+  useEffect(() => {
+    if (accountInfo.account) {
+      const checkWalletIndex = accountInfo.account.wallets.findIndex(
+        (item) => item.symbol === symbol
+      );
+      setIndexOfWallet(checkWalletIndex);
+    }
+  }, [accountInfo.account]);
+
+  if (priceListData.isLoading || accountInfo.loading) {
     return <Typography>isLoading...</Typography>;
   }
+
+  let priceDifference = price - priceListData.data[0];
+  let pricePercentage = Math.round(
+    ((price - priceListData.data[0]) / price) * 100
+  ).toFixed(2);
 
   return (
     <Box>
       <Box sx={{ marginTop: 3 }}>
-        <Typography>{symbol}</Typography>
+        <Typography variant="h4" fontWeight={800}>
+          {getCoinName(symbol as string)}
+        </Typography>
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
           }}
         >
-          <Typography sx={{ marginRight: 1 }}>
-            {(Math.round(price * 100) / 100).toFixed(5)}
+          <Typography variant="h6" fontWeight={600} sx={{ marginRight: 1 }}>
+            {Math.round(price).toFixed(2)}
           </Typography>
-          <Typography>
-            {(Math.round((priceListData.data[0] - price) * 100) / 100).toFixed(
-              2
-            )}
+          <Typography
+            variant="h6"
+            fontWeight={400}
+            color={price - priceListData.data[0] < 0 ? "#CF3049" : "#04A56D"}
+          >
+            {price - priceListData.data[0] < 0 ? "" : "+"}
+            {priceDifference.toFixed(2)}
+            {"  "}({pricePercentage}
+            %)
           </Typography>
         </Box>
       </Box>
@@ -177,16 +201,22 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
           width: "100%",
           justifyContent: "center",
           alignItems: "center",
+          border: "solid 1px #DFDFDF",
+          padding: 2,
+          borderRadius: 2,
         }}
       >
         <AccountInfo accountInfo={accountInfo.account} />
-        <CoinInfo symbol={symbol} />
+        <CoinInfo
+          symbol={symbol}
+          wallet={accountInfo.account?.wallets[indexOfWallet] as Wallet}
+        />
         <Box maxWidth={300} sx={{ marginY: 2 }}>
           <Button
             variant="outlined"
             size="large"
             sx={{
-              width: 140,
+              width: 130,
               marginRight: 1,
             }}
             onClick={() => {
@@ -201,15 +231,31 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
             }}
             variant="outlined"
             size="large"
-            sx={{ width: 140 }}
+            sx={{ width: 130 }}
             color="error"
           >
             sell
           </Button>
         </Box>
       </Box>
-      <BuyCoin price={price} open={openBuy} setOpen={setOpenBuy} />
-      <SellCoin price={price} open={openSell} setOpen={setOpenSell} />
+      <BuyCoin
+        price={price}
+        open={openBuy}
+        setOpen={setOpenBuy}
+        title={symbol as string}
+        pricePercentage={pricePercentage}
+        priceDifference={priceDifference}
+        availableSaving={accountInfo.account?.wallets[0].amount as number}
+      />
+      <SellCoin
+        price={price}
+        open={openSell}
+        setOpen={setOpenSell}
+        title={symbol as string}
+        pricePercentage={pricePercentage}
+        priceDifference={priceDifference}
+        availableCoin={accountInfo.account?.wallets[0].amount as number}
+      />
     </Box>
   );
 };
