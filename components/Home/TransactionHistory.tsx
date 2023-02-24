@@ -51,6 +51,18 @@ const ProfitInfo = () => {
           minHeight: 200,
         }}
       >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Typography sx={{ flex: 0.2 }}>Type</Typography>
+          <Typography sx={{ flex: 0.2 }}>Symbol</Typography>
+          <Typography sx={{ flex: 0.2 }}>Amount</Typography>
+          <Typography sx={{ flex: 0.2 }}>Price</Typography>
+          <Typography sx={{ flex: 0.2 }}>Time</Typography>
+        </Box>
         {transactionInfo &&
           transactionInfo.transaction?.transactions.map((item, index) => {
             if (item.type === "ADD") {
@@ -59,15 +71,17 @@ const ProfitInfo = () => {
                   key={index}
                   sx={{
                     display: "flex",
-                    justifyContent: "space-between",
                     alignItems: "center",
                   }}
                 >
-                  <Typography>[{item.type}]</Typography>
-                  <Typography> {item.symbol}</Typography>
-                  <Typography> </Typography>
-                  <Typography> {item.price}</Typography>
-                  <Typography> {item.timestamp}</Typography>
+                  <Typography sx={{ flex: 0.2 }}>[{item.type}]</Typography>
+                  <Typography sx={{ flex: 0.2 }}> {item.symbol}</Typography>
+                  <Typography sx={{ flex: 0.2 }}> - </Typography>
+                  <Typography sx={{ flex: 0.2 }}>
+                    {" "}
+                    {Number(item.price).toFixed(2)}
+                  </Typography>
+                  <Typography sx={{ flex: 0.2 }}> {item.timestamp}</Typography>
                 </Box>
               );
             } else {
@@ -76,15 +90,16 @@ const ProfitInfo = () => {
                   key={index}
                   sx={{
                     display: "flex",
-                    justifyContent: "space-between",
                     alignItems: "center",
                   }}
                 >
-                  <Typography>[{item.type}]</Typography>
-                  <Typography> {item.symbol}</Typography>
-                  <Typography>{item.amount} </Typography>
-                  <Typography> {item.price}</Typography>
-                  <Typography> {item.timestamp}</Typography>
+                  <Typography sx={{ flex: 0.2 }}>[{item.type}]</Typography>
+                  <Typography sx={{ flex: 0.2 }}> {item.symbol}</Typography>
+                  <Typography sx={{ flex: 0.2 }}>{item.amount} </Typography>
+                  <Typography sx={{ flex: 0.2 }}>
+                    {Number(item.price).toFixed(2)}
+                  </Typography>
+                  <Typography sx={{ flex: 0.2 }}> {item.timestamp}</Typography>
                 </Box>
               );
             }
