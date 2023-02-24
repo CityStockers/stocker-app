@@ -185,7 +185,10 @@ const Home: FC<TradeProps> = () => {
                 );
                 if (index !== 0) {
                   const calculatedAmount = wallet.amount * wallet.avgPrice;
-                  const percentage = (calculatedAmount / totalAmount) * 100;
+                  const percentage =
+                    totalAmount > 0
+                      ? (calculatedAmount / totalAmount) * 100
+                      : 0;
                   return (
                     <Box
                       key={index}
@@ -208,7 +211,8 @@ const Home: FC<TradeProps> = () => {
                     </Box>
                   );
                 } else {
-                  const percentage = (wallet.amount / totalAmount) * 100;
+                  const percentage =
+                    totalAmount > 0 ? (wallet.amount / totalAmount) * 100 : 0;
                   return (
                     <Box
                       key={index}
