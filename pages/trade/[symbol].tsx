@@ -32,7 +32,7 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
   const router = useRouter();
   const symbol = router.query.symbol;
   const listOfIntervals = ["15m", "1h", "8h", "1d", "3d"];
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState(-1);
   const [interval, setInterval] = useState("15m");
   const userId = useRecoilValue(recoilUserId);
   const accountInfo = useAccount(db, userId);
@@ -77,7 +77,7 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
   };
 
   const data = {
-    labels: Array(100).fill("날짜"),
+    labels: Array(120).fill("날짜"),
     datasets: [
       {
         data: priceListData.data,
@@ -110,7 +110,7 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
     }
   }, [accountInfo.account]);
 
-  if (priceListData.isLoading || accountInfo.loading) {
+  if (priceListData.isLoading || accountInfo.loading || price < 0) {
     return <Typography>isLoading...</Typography>;
   }
 
@@ -132,7 +132,7 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
           }}
         >
           <Typography variant="h6" fontWeight={600} sx={{ marginRight: 1 }}>
-            {Math.round(price).toFixed(2)}
+            {Number(price).toFixed(2)}
           </Typography>
           <Typography
             variant="h6"
