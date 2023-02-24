@@ -14,15 +14,18 @@ import useTransaction from "../../stocker-core/sdk/Transaction/useTransaction";
 import { useRecoilValue } from "recoil";
 import { recoilUserId } from "../../states";
 import { db } from "../../utils/firebase";
+import moment from "moment";
 
 type AccountInfoProps = {
   children?: ReactNode;
   accountInfo: Account | null;
 };
 
-/**
- * 함수 설명
- */
+function convertTime(timestamp: number) {
+  const date = new Date(timestamp);
+  return moment(date).format("DD/MM/YYYY hh:mm:ss");
+}
+
 const ProfitInfo = () => {
   const userId = useRecoilValue(recoilUserId);
   const transactionInfo = useTransaction(db, userId);
@@ -72,16 +75,19 @@ const ProfitInfo = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
+                    marginY: 1,
+                    borderBottom: "1px solid #DFDFDF",
                   }}
                 >
                   <Typography sx={{ flex: 0.2 }}>[{item.type}]</Typography>
                   <Typography sx={{ flex: 0.2 }}> {item.symbol}</Typography>
                   <Typography sx={{ flex: 0.2 }}> - </Typography>
                   <Typography sx={{ flex: 0.2 }}>
-                    {" "}
                     {Number(item.price).toFixed(2)}
                   </Typography>
-                  <Typography sx={{ flex: 0.2 }}> {item.timestamp}</Typography>
+                  <Typography sx={{ flex: 0.2 }}>
+                    {convertTime(item.timestamp)}
+                  </Typography>
                 </Box>
               );
             } else {
@@ -91,6 +97,8 @@ const ProfitInfo = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
+                    marginY: 1,
+                    borderBottom: "1px solid #DFDFDF",
                   }}
                 >
                   <Typography sx={{ flex: 0.2 }}>[{item.type}]</Typography>
@@ -99,11 +107,19 @@ const ProfitInfo = () => {
                   <Typography sx={{ flex: 0.2 }}>
                     {Number(item.price).toFixed(2)}
                   </Typography>
-                  <Typography sx={{ flex: 0.2 }}> {item.timestamp}</Typography>
+                  <Typography sx={{ flex: 0.2 }}>
+                    {convertTime(item.timestamp)}
+                  </Typography>
                 </Box>
               );
             }
           })}
+
+        {transactionInfo.transaction?.transactions.length === 0 && (
+          <Typography color={"#AAAAAA"} sx={{ marginTop: 8 }}>
+            You have no transaction, Start Add money and Trade in Trade Page!
+          </Typography>
+        )}
       </Box>
     </Box>
   );
