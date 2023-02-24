@@ -8,15 +8,24 @@ type CoinInfoProps = {
   children?: ReactNode;
   symbol: any;
   wallet: Wallet;
+  currentPrice: number;
 };
 
 /**
  * 함수 설명
  */
-const CoinInfo = ({ symbol, wallet }: CoinInfoProps) => {
+const CoinInfo = ({ symbol, wallet, currentPrice }: CoinInfoProps) => {
   //   const result = getCoinIcon(code);
   const router = useRouter();
+  const calculatedProfit = wallet
+    ? ((currentPrice - wallet.avgPrice) * wallet.amount).toFixed(2)
+    : 0;
 
+  const calculatedPercent = wallet
+    ? wallet.avgPrice > 0
+      ? (((currentPrice - wallet.avgPrice) / wallet.avgPrice) * 100).toFixed(2)
+      : 0
+    : 0;
   return (
     <Box
       sx={{
@@ -56,7 +65,11 @@ const CoinInfo = ({ symbol, wallet }: CoinInfoProps) => {
         }}
       >
         <Typography>Stock Profit</Typography>
-        <Typography color="blue">-$80 (3.6%)</Typography>
+        <Typography color="blue">
+          {Number(calculatedProfit) > 0 && "+"}
+          {calculatedProfit} ({calculatedPercent}
+          %)
+        </Typography>
       </Box>
     </Box>
   );

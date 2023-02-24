@@ -73,14 +73,14 @@ const SellCoin = ({
 
           <Box sx={{ display: "flex", flexDirection: "row", marginTop: 1 }}>
             <Typography sx={{ marginRight: 4 }}>Available Coin</Typography>
-            <Typography>{availableCoin}</Typography>
+            <Typography>{availableCoin ? availableCoin : 0}</Typography>
           </Box>
 
           <TextField
             autoFocus
             margin="dense"
             id="name"
-            label="Amount of coin to buy"
+            label="Amount of coin to SELL"
             type="number"
             variant="standard"
             value={sellAmount}
