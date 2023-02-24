@@ -11,7 +11,7 @@ import useAccount from "../../stocker-core/sdk/Account/useAccount";
 import { db } from "../../utils/firebase";
 import { recoilUserId } from "../../states";
 import { useRecoilValue } from "recoil";
-import { useQuery } from "react-query";
+import { useQueries, useQuery } from "react-query";
 import { getPriceList } from "../../api/binanceAPI";
 import BuyCoin from "../../components/Trade/BuyCoin";
 import SellCoin from "../../components/Trade/SellCoin";
@@ -31,14 +31,24 @@ type TradeSymbolProps = {
 const TradeSymbol: FC<TradeSymbolProps> = () => {
   const router = useRouter();
   const symbol = router.query.symbol;
-
+  const listOfIntervals = ["15m", "1h", "8h", "1d", "3d"];
   const [price, setPrice] = useState(0);
-  const [interval, setInterval] = useState("1d");
+  const [interval, setInterval] = useState("15m");
   const userId = useRecoilValue(recoilUserId);
   const accountInfo = useAccount(db, userId);
   const [openBuy, setOpenBuy] = useState(false);
   const [openSell, setOpenSell] = useState(false);
   const [indexOfWallet, setIndexOfWallet] = useState(-1);
+
+  const priceListDatas = useQueries(
+    listOfIntervals.map((item) => {
+      return {
+        queryKey: ["priceList", symbol, item],
+        queryFn: () => getPriceList(symbol as string, item),
+      };
+    })
+  );
+
   const priceListData = useQuery(
     ["priceList", symbol, interval],
     () => getPriceList(symbol as string, interval),
@@ -146,7 +156,7 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
         }}
       >
         <Line data={data} options={options} />
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <Box sx={{ display: "flex", justifyContent: "center", marginY: 2 }}>
           <Box
             sx={{
               display: "flex",
@@ -156,37 +166,52 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
             }}
           >
             <Button
-              variant="outlined"
+              variant={interval === "15m" ? "contained" : "outlined"}
               size="small"
               sx={{ padding: 0, minWidth: 40 }}
+              onClick={() => {
+                setInterval("15m");
+              }}
             >
               1d
             </Button>
             <Button
-              variant="outlined"
+              variant={interval === "1h" ? "contained" : "outlined"}
               size="small"
               sx={{ padding: 0, minWidth: 40 }}
+              onClick={() => {
+                setInterval("1h");
+              }}
             >
               5d
             </Button>
             <Button
-              variant="outlined"
+              variant={interval === "8h" ? "contained" : "outlined"}
               size="small"
               sx={{ padding: 0, minWidth: 40 }}
+              onClick={() => {
+                setInterval("8h");
+              }}
             >
               1m
             </Button>
             <Button
-              variant="outlined"
+              variant={interval === "1d" ? "contained" : "outlined"}
               size="small"
               sx={{ padding: 0, minWidth: 40 }}
+              onClick={() => {
+                setInterval("1d");
+              }}
             >
               6m
             </Button>
             <Button
-              variant="outlined"
+              variant={interval === "3d" ? "contained" : "outlined"}
               size="small"
               sx={{ padding: 0, minWidth: 40 }}
+              onClick={() => {
+                setInterval("3d");
+              }}
             >
               1y
             </Button>
@@ -210,6 +235,7 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
         <CoinInfo
           symbol={symbol}
           wallet={accountInfo.account?.wallets[indexOfWallet] as Wallet}
+          currentPrice={price}
         />
         <Box maxWidth={300} sx={{ marginY: 2 }}>
           <Button
@@ -254,7 +280,9 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
         title={symbol as string}
         pricePercentage={pricePercentage}
         priceDifference={priceDifference}
-        availableCoin={accountInfo.account?.wallets[0].amount as number}
+        availableCoin={
+          accountInfo.account?.wallets[indexOfWallet]?.amount as number
+        }
       />
     </Box>
   );
