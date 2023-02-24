@@ -49,10 +49,10 @@ export default function Home() {
       sx={{
         my: 4,
         display: "flex",
-        flex: "auto",
         flexDirection: "column",
-        justifyContent: "center",
+        justifyContent: "space-between",
         alignItems: "center",
+        marginTop: 8,
       }}
     >
       <Typography
