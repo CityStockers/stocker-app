@@ -36,7 +36,7 @@ const Auto: FC<TradeProps> = () => {
   const [coin, setCoin] = useState("");
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
-
+  const [budget, setBudget] = useState("");
   const options = {
     readOnly: false,
     minimap: { enabled: false },
@@ -140,6 +140,18 @@ const Auto: FC<TradeProps> = () => {
               renderInput={(params) => <TextField {...params} />}
             />
           </LocalizationProvider>
+        </Box>
+
+        <Box sx={{ minWidth: 200, marginBottom: 2 }}>
+          <TextField
+            id="outlined-basic"
+            label="budget"
+            variant="outlined"
+            value={budget}
+            onChange={(e) => {
+              setBudget(e.target.value);
+            }}
+          />
         </Box>
       </Box>
 
