@@ -17,14 +17,18 @@ type TradeProps = {
   children?: ReactNode;
 };
 
-const code = `import { SDK } from "../types";
+const code = `import { Trader } from "../../../market/Trader";
 
-//Code your Auto Algorithm!
-function userTrade(sdk: SDK) {
- console.log('Hello! City Stockers!');
-}
+const trader = new Trader();
 
-export default userTrade;`;
+trader.onTimeChange((market, timestamp) => {
+  if (Math.random() > 0.5) {
+    const { transaction, error } = market.buy(10);
+    if (error) console.log(error.message);
+  }
+}, 1000);
+
+export default trader;`;
 
 /**
  * 함수 설명
@@ -71,6 +75,9 @@ const Auto: FC<TradeProps> = () => {
       const result = await axios.post("http://localhost:3000/runner", {
         code: code,
         symbol: symbol,
+        startTime: startDate,
+        endTime: endDate,
+        budget: budget,
       });
       console.log(result.data);
       return result.data;
