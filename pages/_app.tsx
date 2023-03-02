@@ -35,16 +35,6 @@ const MyApp = (props: MyAppProps) => {
     }
   }, []);
 
-  React.useEffect(() => {
-    const userId = Cookies.get("userId");
-    if (userId && route.pathname === "/") {
-      route.push("/home");
-    }
-    if (userId === undefined && route.pathname !== "/") {
-      route.push("/");
-    }
-  }, [route]);
-
   return (
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>

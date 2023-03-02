@@ -16,6 +16,8 @@ import Button from "@mui/material/Button";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
+import { useRecoilState } from "recoil";
+import { recoilUserId } from "../states";
 
 interface Props {
   /**
@@ -35,8 +37,10 @@ const MappingRoute = { home: "Home", trade: "Trade", auto: "Auto" };
 
 export default function NavigationBar(props: Props) {
   const route = useRouter();
+  const [userId, setUserId] = useRecoilState(recoilUserId);
   const handleLogout = () => {
     Cookies.remove("userId");
+    setUserId("0");
     route.push("/");
   };
   const { window } = props;

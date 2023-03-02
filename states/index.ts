@@ -1,6 +1,9 @@
 import { atom } from "recoil";
+import Cookies from "js-cookie";
+
+const userId = Cookies.get("userId");
 
 export const recoilUserId = atom<string>({
   key: "userId",
-  default: "0",
+  default: userId ? userId : "0",
 });

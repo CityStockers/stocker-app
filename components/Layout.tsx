@@ -1,8 +1,11 @@
 // components/Layout.js
 import { Container, Toolbar } from "@mui/material";
+import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import React, { Component, ReactNode } from "react";
+import { useRecoilState } from "recoil";
 import Copyright from "../src/Copyright";
+import { recoilUserId } from "../states";
 import NavigationBar from "./NavigationBar";
 
 type LayoutProp = {
@@ -10,12 +13,21 @@ type LayoutProp = {
 };
 
 const Layout = ({ children }: LayoutProp) => {
-  const router = useRouter();
-  console.log(router.pathname);
+  const [userId, setUserId] = useRecoilState(recoilUserId);
+  const route = useRouter();
+  React.useEffect(() => {
+    if (userId !== "0" && route.pathname === "/") {
+      route.push("/home");
+    }
+    if (userId === "0" && route.pathname !== "/") {
+      route.push("/");
+    }
+  }, [route]);
+
   return (
     <Container
       sx={[
-        router.pathname === "/auto"
+        route.pathname === "/auto"
           ? { width: "100%", height: "80vh" }
           : {
               minWidth: {
