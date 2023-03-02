@@ -10,8 +10,10 @@ import "../styles/globals.css";
 import Head from "next/head";
 import NavigationBar from "../components/NavigationBar";
 import Layout from "../components/Layout";
-import { RecoilRoot } from "recoil";
-
+import { RecoilRoot, useRecoilValue } from "recoil";
+import { recoilUserId } from "../states";
+import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 const clientSideEmotionCache = createEmotionCache();
 const queryClient = new QueryClient();
 
@@ -23,6 +25,7 @@ const lightTheme = createTheme(lightThemeOptions);
 
 const MyApp = (props: MyAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+  const route = useRouter();
 
   React.useEffect(() => {
     // Remove the server-side injected CSS.
@@ -31,6 +34,16 @@ const MyApp = (props: MyAppProps) => {
       jssStyles?.parentElement?.removeChild(jssStyles);
     }
   }, []);
+
+  React.useEffect(() => {
+    const userId = Cookies.get("userId");
+    if (userId && route.pathname === "/") {
+      route.push("/home");
+    }
+    if (userId === undefined && route.pathname !== "/") {
+      route.push("/");
+    }
+  }, [route]);
 
   return (
     <QueryClientProvider client={queryClient}>

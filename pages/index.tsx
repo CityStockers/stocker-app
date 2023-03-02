@@ -25,9 +25,6 @@ export default function Home() {
 
         // The signed-in user info.
         const user = result.user;
-
-        // ...
-        console.log(user.uid);
         setUserId(user.uid);
         Cookies.set("userId", user.uid);
         router.push("./home");
