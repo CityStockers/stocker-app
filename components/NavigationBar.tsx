@@ -14,6 +14,8 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 
 interface Props {
   /**
@@ -24,10 +26,19 @@ interface Props {
 }
 
 const drawerWidth = 280;
-const navItems = ["home", "trade", "auto"];
+const navItems = [
+  { route: "home", title: "Home" },
+  { route: "trade", title: "Trade" },
+  { route: "auto", title: "Auto" },
+];
 const MappingRoute = { home: "Home", trade: "Trade", auto: "Auto" };
 
 export default function NavigationBar(props: Props) {
+  const route = useRouter();
+  const handleLogout = () => {
+    Cookies.remove("userId");
+    route.push("/");
+  };
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -43,14 +54,19 @@ export default function NavigationBar(props: Props) {
       <Divider />
       <List>
         {navItems.map((item) => (
-          <Link href={`/${item}`} key={item}>
+          <Link href={`/${item.route}`} key={item.route}>
             <ListItem disablePadding>
               <ListItemButton sx={{ textAlign: "center" }}>
-                <ListItemText primary={item} />
+                <ListItemText primary={item.title} />
               </ListItemButton>
             </ListItem>
           </Link>
         ))}
+        <ListItem disablePadding>
+          <ListItemButton sx={{ textAlign: "center" }} onClick={handleLogout}>
+            <ListItemText primary={"LogOut"} />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );
@@ -81,14 +97,22 @@ export default function NavigationBar(props: Props) {
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "flex" } }}>
             {navItems.map((item) => (
-              <Link href={`/${item}`} key={item}>
+              <Link href={`/${item.route}`} key={item.route}>
                 <ListItem disablePadding>
                   <ListItemButton>
-                    <ListItemText primary={MappingRoute[item]} />
+                    <ListItemText primary={item.title} />
                   </ListItemButton>
                 </ListItem>
               </Link>
             ))}
+            <ListItem disablePadding>
+              <ListItemButton
+                sx={{ textAlign: "center" }}
+                onClick={handleLogout}
+              >
+                <ListItemText primary={"LogOut"} />
+              </ListItemButton>
+            </ListItem>
           </Box>
         </Toolbar>
       </AppBar>
