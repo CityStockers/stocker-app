@@ -39,8 +39,12 @@ const CoinProfit = ({ walletInfo }: WalletInfoProps) => {
   };
   //   const result = getCoinIcon(code);
   const router = useRouter();
-  if (priceData.isLoading) {
+  if (priceData.isLoading || priceData.isError) {
     return <Typography>Loading Profit...</Typography>;
+  }
+
+  if (priceData.isError) {
+    return <Typography>Profit Error</Typography>;
   }
   return (
     <Box

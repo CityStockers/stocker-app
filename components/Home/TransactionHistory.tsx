@@ -101,7 +101,18 @@ const ProfitInfo = () => {
                     borderBottom: "1px solid #DFDFDF",
                   }}
                 >
-                  <Typography sx={{ flex: 0.2 }}>[{item.type}]</Typography>
+                  <Typography
+                    color={
+                      item.type === "BUY"
+                        ? "#CF3049"
+                        : item.type === "SELL"
+                        ? "#04A56D"
+                        : "#111111"
+                    }
+                    sx={{ flex: 0.2 }}
+                  >
+                    [{item.type}]
+                  </Typography>
                   <Typography sx={{ flex: 0.2 }}> {item.symbol}</Typography>
                   <Typography sx={{ flex: 0.2 }}>{item.amount} </Typography>
                   <Typography sx={{ flex: 0.2 }}>
