@@ -12,21 +12,37 @@ import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { lib } from "./type";
 
 type TradeProps = {
   children?: ReactNode;
 };
 
-const code = `import { Trader } from "../../../market/Trader";
+const code = `const trader = new Trader();
 
-const trader = new Trader();
+let yesterdayPrice: Quote = { timestamp: 0, openPrice: 0, closePrice: 0, lowPrice: 0, highPrice: 0 };
+let targetBuyPrice: number;
 
 trader.onTimeChange((market, timestamp) => {
-  if (Math.random() > 0.5) {
-    const { transaction, error } = market.buy(10);
-    if (error) console.log(error.message);
+  if (yesterdayPrice.timestamp !== 0) {
+    const todayPrice = market.getQuote(timestamp);
+    targetBuyPrice =
+      todayPrice.openPrice +
+      (yesterdayPrice.highPrice - yesterdayPrice.lowPrice) * 0.25;
+    if (targetBuyPrice <= todayPrice.highPrice && market.getCoin() === 0) {
+      market.buy(
+        Math.trunc(market.getWallet() / targetBuyPrice),
+        targetBuyPrice
+      );
+    }
   }
-}, 1000);
+
+  if (market.getCoin() > 0) {
+    market.sell(market.getCoin());
+  }
+
+  yesterdayPrice = market.getQuote(timestamp);
+}, "1d");
 
 export default trader;`;
 
@@ -63,10 +79,8 @@ const Auto: FC<TradeProps> = () => {
       typeRoots: ["node_modules/@types"],
     });
     monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true);
-    monaco.languages.typescript.typescriptDefaults.addExtraLib(
-      `export declare function next() : string`,
-      "file:///node_modules/types/"
-    );
+    const uri = monaco.Uri.file("dir/market.d.ts");
+    monaco.editor.createModel(lib, "typescript", uri);
     console.log({ monaco });
   }
 

@@ -14,17 +14,12 @@ import useTransaction from "../../stocker-core/sdk/Transaction/useTransaction";
 import { useRecoilValue } from "recoil";
 import { recoilUserId } from "../../states";
 import { db } from "../../utils/firebase";
-import moment from "moment";
+import { convertTime } from "../../utils";
 
 type AccountInfoProps = {
   children?: ReactNode;
   accountInfo: Account | null;
 };
-
-function convertTime(timestamp: number) {
-  const date = new Date(timestamp);
-  return moment(date).format("DD/MM/YYYY hh:mm:ss");
-}
 
 const ProfitInfo = () => {
   const userId = useRecoilValue(recoilUserId);

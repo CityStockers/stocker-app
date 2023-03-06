@@ -16,6 +16,7 @@ import { getPriceList } from "../../api/binanceAPI";
 import BuyCoin from "../../components/Trade/BuyCoin";
 import SellCoin from "../../components/Trade/SellCoin";
 import { Wallet } from "../../stocker-core/sdk/Types/Account";
+import { parsePriceList, parseTimeList } from "../../utils";
 Chart.register(CategoryScale);
 
 type TradeSymbolProps = {
@@ -76,15 +77,6 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
     },
   };
 
-  const data = {
-    labels: Array(120).fill("날짜"),
-    datasets: [
-      {
-        data: priceListData.data,
-      },
-    ],
-  };
-
   useEffect(() => {
     if (typeof symbol === "string") {
       let ws = new WebSocket(
@@ -114,9 +106,18 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
     return <Typography>isLoading...</Typography>;
   }
 
-  let priceDifference = price - priceListData.data[0];
+  const data = {
+    labels: parseTimeList(priceListData.data),
+    datasets: [
+      {
+        data: parsePriceList(priceListData.data),
+      },
+    ],
+  };
+
+  let priceDifference = price - priceListData.data[0].closePrice;
   let pricePercentage = Math.round(
-    ((price - priceListData.data[0]) / price) * 100
+    ((price - priceListData.data[0].closePrice) / price) * 100
   ).toFixed(2);
 
   return (
@@ -137,9 +138,13 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
           <Typography
             variant="h6"
             fontWeight={400}
-            color={price - priceListData.data[0] < 0 ? "#CF3049" : "#04A56D"}
+            color={
+              price - priceListData.data[0].closePrice < 0
+                ? "#CF3049"
+                : "#04A56D"
+            }
           >
-            {price - priceListData.data[0] < 0 ? "" : "+"}
+            {price - priceListData.data[0].closePrice < 0 ? "" : "+"}
             {priceDifference.toFixed(2)}
             {"  "}({pricePercentage}
             %)

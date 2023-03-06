@@ -11,7 +11,7 @@ export const getPrice = async (symbol: string) => {
 
 export const getPriceList = async (symbol: string, interval: string) => {
   const { data } = await axios.get(
-    `${baseUrl}/pricelist/crypto/${symbol}/${interval}`
+    `${baseUrl}/pricelist/crypto/${symbol}/${interval}/120`
   );
 
   return data;
