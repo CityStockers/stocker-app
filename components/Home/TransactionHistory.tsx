@@ -15,6 +15,7 @@ import { useRecoilValue } from "recoil";
 import { recoilUserId } from "../../states";
 import { db } from "../../utils/firebase";
 import { convertTime } from "../../utils";
+import { LoadingIndicator } from "../Common/LoadingIndicator";
 
 type AccountInfoProps = {
   children?: ReactNode;
@@ -28,7 +29,7 @@ const ProfitInfo = () => {
   const router = useRouter();
 
   if (transactionInfo.loading) {
-    return <div>loading...</div>;
+    return <LoadingIndicator />;
   }
   if (transactionInfo.error) {
     return <div>error...</div>;

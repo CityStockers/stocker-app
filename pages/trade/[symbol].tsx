@@ -17,6 +17,7 @@ import BuyCoin from "../../components/Trade/BuyCoin";
 import SellCoin from "../../components/Trade/SellCoin";
 import { Wallet } from "../../stocker-core/sdk/Types/Account";
 import { parsePriceList, parseTimeList } from "../../utils";
+import { LoadingIndicator } from "../../components/Common/LoadingIndicator";
 Chart.register(CategoryScale);
 
 type TradeSymbolProps = {
@@ -103,7 +104,7 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
   }, [accountInfo.account]);
 
   if (priceListData.isLoading || accountInfo.loading || price < 0) {
-    return <Typography>isLoading...</Typography>;
+    return <LoadingIndicator />;
   }
 
   const data = {

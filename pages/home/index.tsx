@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import React, { FC, ReactNode, useEffect, useState } from "react";
 import AccountInfo from "../../components/AccountInfo";
 import Chart from "chart.js/auto";
@@ -20,6 +20,7 @@ import { getAccountTotal } from "../../stocker-core/sdk/Account/getAccountTotal"
 import addMoney from "../../stocker-core/sdk/Transaction/addMoney";
 import ProfitInfo from "../../components/Home/ProfitInfo";
 import TransactionHistory from "../../components/Home/TransactionHistory";
+import { LoadingIndicator } from "../../components/Common/LoadingIndicator";
 
 Chart.register(CategoryScale);
 
@@ -118,7 +119,7 @@ const Home: FC<TradeProps> = () => {
   }, [accountInfo.account?.wallets]);
 
   if (accountInfo.loading) {
-    return <div>loading...</div>;
+    return <LoadingIndicator />;
   }
   if (accountInfo.error) {
     return <div>error...</div>;
