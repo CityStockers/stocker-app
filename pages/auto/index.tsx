@@ -1,6 +1,6 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import React, { FC, ReactNode, useEffect, useRef, useState } from "react";
-import Editor, { useMonaco, Monaco } from "@monaco-editor/react";
+import Editor, { Monaco } from "@monaco-editor/react";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -12,15 +12,17 @@ import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { lib } from "./type";
+import { lib, TradeResult } from "./type";
+import { useMutation } from "react-query";
+import { ScriptResult } from "../../components/Auto/ScriptResult";
 
 type TradeProps = {
   children?: ReactNode;
 };
 
-const code = `const trader = new Trader();
+const firstcode = `const trader = new Trader();
 
-let yesterdayPrice: Quote = { timestamp: 0, openPrice: 0, closePrice: 0, lowPrice: 0, highPrice: 0 };
+let yesterdayPrice = { timestamp: 0, openPrice: 0, closePrice: 0, lowPrice: 0, highPrice: 0 };
 let targetBuyPrice: number;
 
 trader.onTimeChange((market, timestamp) => {
@@ -46,6 +48,74 @@ trader.onTimeChange((market, timestamp) => {
 
 export default trader;`;
 
+const secondCode = `
+
+const trader = new Trader();
+
+// Define the parameters
+var period = 5; // The number of bars to calculate the moving average
+var threshold = 0.05; // The percentage above or below the moving average to trigger a trade
+var lotSize = 10; // The number of units to trade
+
+// Initialize the variables
+var ma = 0; // The moving average value
+var sum = 0; // The sum of the prices for the moving average calculation
+var position = 0; // The current position: 1 for long, -1 for short, 0 for none
+var data: number[] = []
+var i = 0;
+// Loop through the price data
+trader.onTimeChange((market, timestamp) => {
+  // Get the current price
+  var price = market.getQuote(timestamp);
+   data.push(price.closePrice)
+  // Update the sum and the moving average
+  if (i >= period) {
+    // Remove the oldest price from the sum
+    sum -= data[i - period];
+  }
+
+  // Add the current price to the sum
+  sum += price.closePrice;
+
+  // Calculate the moving average
+  ma = sum / Math.min(i + 1, period);
+
+  // Check if there is a trading signal
+  if (price.closePrice > ma * (1 + threshold)) {
+    // Buy signal: go long or close short position
+    if (position != 1) {
+      market.buy(lotSize)
+      console.log("Buy " + lotSize + " units at " + price);
+      position = 1;
+    }
+    
+    } else if (price.closePrice < ma * (1 - threshold)) {
+      // Sell signal: go short or close long position
+      
+      if (position != -1) {
+        market.sell(lotSize)
+        console.log("Sell " + lotSize + " units at " + price);
+        position = -1;
+      }
+      
+      } else {
+        // No signal: do nothing
+  }
+i += 1;
+}, "1d");
+
+export default trader;
+
+`;
+
+const thirdCode = `const trader = new Trader();
+
+trader.onTimeChange((market, timestamp) => {
+
+}, "1d");
+
+export default trader;`;
+
 /**
  * 함수 설명
  *
@@ -57,19 +127,22 @@ const Auto: FC<TradeProps> = () => {
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
   const [budget, setBudget] = useState("");
+  const [defaultCode, setDefaultCode] = useState(thirdCode);
   const options = {
     readOnly: false,
     minimap: { enabled: false },
   };
-  const editorRef = useRef(null);
+  const editorRef = useRef<any>(null);
 
   const handleChange = (event: SelectChangeEvent) => {
     setCoin(event.target.value as string);
   };
-  function handleEditorDidMount(editor, monaco) {
+  function handleEditorDidMount(editor: any) {
     editorRef.current = editor;
   }
   function handleEditorWillMount(monaco: Monaco) {
+    monaco.editor.getModels().forEach((model) => model.dispose());
+
     monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
       target: monaco.languages.typescript.ScriptTarget.ES2016,
       allowNonTsExtensions: true,
@@ -81,30 +154,38 @@ const Auto: FC<TradeProps> = () => {
     monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true);
     const uri = monaco.Uri.file("dir/market.d.ts");
     monaco.editor.createModel(lib, "typescript", uri);
-    console.log({ monaco });
   }
 
-  async function submitCode(symbol: string, code: string) {
-    try {
-      const result = await axios.post("http://localhost:3000/runner", {
-        code: code,
-        symbol: symbol,
-        startTime: startDate,
-        endTime: endDate,
-        budget: budget,
-      });
-      console.log(result.data);
-      return result.data;
-    } catch (error) {
-      console.log(error);
-    }
+  async function submitCode(
+    symbol: string,
+    code: string
+  ): Promise<TradeResult> {
+    const { data } = await axios.post("http://localhost:8080/runner", {
+      code: code,
+      symbol: symbol,
+      startTime: startDate,
+      endTime: endDate,
+      budget: budget,
+    });
+    return data;
   }
+
+  const runScriptMutation = useMutation(
+    (code: string) => submitCode(coin, code),
+    {
+      onSuccess: (_data) => {
+        console.log("Run code successful:", _data);
+      },
+      onError: (_err) => {
+        console.log("Run code failed:", _err);
+      },
+    }
+  );
 
   return (
     <Box
       sx={{
         width: "100%",
-        height: "100%",
         display: "flex",
         flexDirection: "row",
         marginTop: 4,
@@ -115,8 +196,6 @@ const Auto: FC<TradeProps> = () => {
         sx={{
           flexDirection: "column",
           display: "flex",
-          backgroundColor: "grey",
-          flex: 0.2,
           marginX: 2,
         }}
       >
@@ -182,11 +261,36 @@ const Auto: FC<TradeProps> = () => {
           border: "solid 1px #DFDFDF",
           display: "flex",
           flexDirection: "column",
-          flex: 0.8,
+          flex: 1,
+          padding: 1,
         }}
       >
+        <Box>
+          <Button
+            onClick={() => {
+              setDefaultCode(firstcode);
+            }}
+          >
+            LWVA
+          </Button>
+          <Button
+            onClick={() => {
+              setDefaultCode(secondCode);
+            }}
+          >
+            TFA
+          </Button>
+          <Button
+            onClick={() => {
+              setDefaultCode(thirdCode);
+            }}
+          >
+            FREE
+          </Button>
+        </Box>
         <Box
           sx={{
+            borderRadius: 2,
             backgroundColor: "#FFFFFF",
             padding: 1,
             flex: 0.7,
@@ -196,10 +300,12 @@ const Auto: FC<TradeProps> = () => {
             height={400}
             width="100%"
             defaultLanguage="typescript"
-            defaultValue={code}
+            defaultValue={defaultCode}
+            value={defaultCode}
             onMount={handleEditorDidMount}
             beforeMount={handleEditorWillMount}
             options={options}
+            loading={<CircularProgress color="primary" />}
           />
 
           <Box
@@ -210,23 +316,19 @@ const Auto: FC<TradeProps> = () => {
             }}
           >
             <Button
-              onClick={() => submitCode(coin, editorRef.current.getValue())}
+              onClick={() => {
+                runScriptMutation.mutate(editorRef.current.getValue());
+              }}
             >
               run
             </Button>
           </Box>
         </Box>
-        <Box
-          sx={{
-            flex: 0.3,
-            backgroundColor: "#FFFFFF",
-            borderRadius: 2,
-            border: "solid 1px #DFDFDF",
-            padding: 2,
-          }}
-        >
-          Result
-        </Box>
+
+        <ScriptResult
+          scriptData={runScriptMutation.data}
+          loading={runScriptMutation.isLoading}
+        />
       </Box>
     </Box>
   );
