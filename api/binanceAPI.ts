@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "http://localhost:3002";
+const baseUrl = "http://localhost:8080";
 
 export const getPrice = async (symbol: string) => {
   const { data } = await axios.get(`${baseUrl}/quote/crypto/${symbol}`, {

@@ -1,13 +1,5 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Typography,
-} from "@mui/material";
-import React, { FC, ReactNode } from "react";
-import Image from "next/image";
+import { Box, Typography } from "@mui/material";
+import React, { ReactNode } from "react";
 import { useRouter } from "next/router";
 import { Account } from "../stocker-core/sdk/Types/Account";
 

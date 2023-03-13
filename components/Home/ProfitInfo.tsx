@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Typography,
-} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React, { FC, ReactNode } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";

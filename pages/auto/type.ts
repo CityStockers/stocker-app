@@ -130,4 +130,11 @@ export type Transaction = {
   timestamp: number;
 };
 
+export type TradeResult = {
+  account: Account;
+  transactions: Transaction[];
+  logs: string[];
+  errors: string[];
+};
+
 export type TransactionAction = "BUY" | "SELL";
