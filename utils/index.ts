@@ -1,5 +1,5 @@
 import moment from "moment";
-import { Quote } from "../pages/auto/type";
+import { Quote } from "../components/Auto/type";
 
 export const parsePriceList = (data: Quote[]): number[] => {
   const parsedPriceArray: number[] = [];

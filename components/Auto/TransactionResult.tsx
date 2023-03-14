@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { Transaction } from "../../pages/auto/type";
+import { Transaction } from "./type";
 import { convertTime } from "../../utils";
 
 type Props = {

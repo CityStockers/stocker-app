@@ -1,6 +1,6 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { TradeResult } from "../../pages/auto/type";
+import { TradeResult } from "./type";
 import { convertTime } from "../../utils";
 import { LoadingIndicator } from "../Common/LoadingIndicator";
 import { ErrorResult } from "./ErrorResult";
