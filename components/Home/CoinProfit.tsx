@@ -1,13 +1,5 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Typography,
-} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React, { FC, ReactNode } from "react";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { Account, Wallet } from "../../stocker-core/sdk/Types/Account";
 import { useQuery } from "react-query";
@@ -21,20 +13,13 @@ type WalletInfoProps = {
 /**
  */
 const CoinProfit = ({ walletInfo }: WalletInfoProps) => {
-  const priceData = useQuery(
-    ["price", walletInfo.symbol],
-    () => getPrice(walletInfo.symbol),
-    {
-      onSuccess(data) {
-        console.log(data);
-      },
-    }
+  const priceData = useQuery(["price", walletInfo.symbol], () =>
+    getPrice(walletInfo.symbol)
   );
 
   const calculateProfit = (currentPrice: number) => {
     const totalBoughtPrice = walletInfo.amount * walletInfo.avgPrice;
     const evaluatedPrice = walletInfo.amount * currentPrice;
-
     return evaluatedPrice - totalBoughtPrice;
   };
   //   const result = getCoinIcon(code);

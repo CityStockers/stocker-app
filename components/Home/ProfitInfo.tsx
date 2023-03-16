@@ -2,8 +2,9 @@ import { Box, Typography } from "@mui/material";
 import React, { FC, ReactNode } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { Account } from "../../stocker-core/sdk/Types/Account";
+import { Account, Wallet } from "../../stocker-core/sdk/Types/Account";
 import CoinProfit from "./CoinProfit";
+import { parseCoinList } from "../../utils";
 
 type AccountInfoProps = {
   children?: ReactNode;
@@ -15,6 +16,7 @@ type AccountInfoProps = {
  */
 const ProfitInfo = ({ accountInfo }: AccountInfoProps) => {
   //   const result = getCoinIcon(code);
+
   const router = useRouter();
   return (
     <Box
@@ -30,7 +32,8 @@ const ProfitInfo = ({ accountInfo }: AccountInfoProps) => {
         Profit
       </Typography>
       {accountInfo &&
-        (accountInfo.wallets.length === 1 ? (
+        (accountInfo.wallets.length === 1 ||
+        parseCoinList(accountInfo.wallets).length === 0 ? (
           <Box
             sx={{
               display: "flex",
