@@ -8,9 +8,6 @@ type AccountInfoProps = {
   accountInfo: Account | null;
 };
 
-/**
- * 함수 설명
- */
 const AccountInfo = ({ accountInfo }: AccountInfoProps) => {
   //   const result = getCoinIcon(code);
   const router = useRouter();

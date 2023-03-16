@@ -1,16 +1,6 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Typography,
-} from "@mui/material";
-import React, { FC, ReactNode } from "react";
-import { getCoinIcon } from "../../api/coinIcon";
+import { Box, Button, Card, CardContent, Typography } from "@mui/material";
+import React, { ReactNode } from "react";
 import Image from "next/image";
-import coin from "../../asset/coinIcons/btc.svg";
-import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { getPrice } from "../../api/binanceAPI";
@@ -22,20 +12,10 @@ type TradeCoinCardProps = {
   symbol: string;
 };
 
-/**
- * 함수 설명
- *
- * @param {any} example 함수가 받는 파라 미터 설명
- * @returns 리턴 설명
- */
 const TradeCoinCard = ({ symbol, code, name }: TradeCoinCardProps) => {
   //   const result = getCoinIcon(code);
   const router = useRouter();
-  const exchangeInfoData = useQuery(["price", symbol], () => getPrice(symbol), {
-    onSuccess(data) {
-      console.log(data);
-    },
-  });
+  const exchangeInfoData = useQuery(["price", symbol], () => getPrice(symbol));
   return (
     <Box
       sx={{
@@ -81,7 +61,10 @@ const TradeCoinCard = ({ symbol, code, name }: TradeCoinCardProps) => {
                 price
               </Typography>
               <Typography variant="subtitle2">
-                {exchangeInfoData.data?.price}
+                $
+                {exchangeInfoData.data
+                  ? Math.round(exchangeInfoData.data.price * 100) / 100
+                  : "-"}
               </Typography>
             </Box>
           </CardContent>

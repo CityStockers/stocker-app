@@ -24,12 +24,6 @@ type TradeSymbolProps = {
   children?: ReactNode;
 };
 
-/**
- * 함수 설명
- *
- * @param {any} example 함수가 받는 파라 미터 설명
- * @returns 리턴 설명
- */
 const TradeSymbol: FC<TradeSymbolProps> = () => {
   const router = useRouter();
   const symbol = router.query.symbol;
@@ -51,14 +45,8 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
     })
   );
 
-  const priceListData = useQuery(
-    ["priceList", symbol, interval],
-    () => getPriceList(symbol as string, interval),
-    {
-      onSuccess(data) {
-        console.log(data);
-      },
-    }
+  const priceListData = useQuery(["priceList", symbol, interval], () =>
+    getPriceList(symbol as string, interval)
   );
 
   let options = {
