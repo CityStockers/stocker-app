@@ -14,7 +14,7 @@ import buy from "../../stocker-core/sdk/Transaction/buy";
 import { db } from "../../utils/firebase";
 import { useRecoilValue } from "recoil";
 import { recoilUserId } from "../../states";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type BuyCoinProps = {
   children?: React.ReactNode;
@@ -37,12 +37,15 @@ const BuyCoin = ({
   availableSaving,
 }: BuyCoinProps) => {
   const userId = useRecoilValue(recoilUserId);
-
   const [buyAmount, setBuyAmount] = useState("");
+  const [buyError, setBuyError] = useState(false);
   const handleClose = () => {
     setOpen(false);
   };
 
+  useEffect(() => {
+    setBuyError(false);
+  }, [buyAmount]);
   return (
     <div>
       <Dialog fullWidth open={open} onClose={handleClose}>
@@ -94,13 +97,22 @@ const BuyCoin = ({
               ${buyAmount ? (Number(buyAmount) * price).toFixed(2) : 0}
             </Typography>
           </Box>
+          {buyError && (
+            <Typography color="red" fontSize={12}>
+              Not Enough Savings to Buy!
+            </Typography>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button
             onClick={() => {
-              buy(db, userId, title, Number(buyAmount), price);
-              handleClose();
+              if (availableSaving < Number(buyAmount) * price) {
+                setBuyError(true);
+              } else {
+                buy(db, userId, title, Number(buyAmount), price);
+                handleClose();
+              }
             }}
           >
             Buy

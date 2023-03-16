@@ -15,7 +15,7 @@ import {
 import { db } from "../../utils/firebase";
 import { useRecoilValue } from "recoil";
 import { recoilUserId } from "../../states";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type SellCoinProps = {
   children?: React.ReactNode;
@@ -39,9 +39,14 @@ const SellCoin = ({
 }: SellCoinProps) => {
   const userId = useRecoilValue(recoilUserId);
   const [sellAmount, setSellAmount] = useState("");
+  const [sellError, setSellError] = useState(false);
   const handleClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    setSellError(false);
+  }, [sellAmount]);
 
   return (
     <div>
@@ -94,13 +99,22 @@ const SellCoin = ({
               ${sellAmount ? (Number(sellAmount) * price).toFixed(2) : 0}
             </Typography>
           </Box>
+          {sellError && (
+            <Typography color="red" fontSize={12}>
+              Not Enough Coins to Sell!
+            </Typography>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button
             onClick={() => {
-              sell(db, userId, title, Number(sellAmount), price);
-              handleClose();
+              if (availableCoin < Number(sellAmount)) {
+                setSellError(true);
+              } else {
+                sell(db, userId, title, Number(sellAmount), price);
+                handleClose();
+              }
             }}
           >
             Sell
