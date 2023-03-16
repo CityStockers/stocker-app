@@ -14,6 +14,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { lib, TradeResult } from "../../components/Auto/type";
 import { useMutation } from "react-query";
 import { ScriptResult } from "../../components/Auto/ScriptResult";
+import { submitCode } from "../../api/binanceAPI";
 
 type TradeProps = {
   children?: ReactNode;
@@ -84,7 +85,6 @@ trader.onTimeChange((market, timestamp) => {
     // Buy signal: go long or close short position
     if (position != 1) {
       market.buy(lotSize)
-      console.log("Buy " + lotSize + " units at " + price);
       position = 1;
     }
     
@@ -93,7 +93,6 @@ trader.onTimeChange((market, timestamp) => {
       
       if (position != -1) {
         market.sell(lotSize)
-        console.log("Sell " + lotSize + " units at " + price);
         position = -1;
       }
       
@@ -155,30 +154,8 @@ const Auto: FC<TradeProps> = () => {
     monaco.editor.createModel(lib, "typescript", uri);
   }
 
-  async function submitCode(
-    symbol: string,
-    code: string
-  ): Promise<TradeResult> {
-    const { data } = await axios.post("http://localhost:8080/runner", {
-      code: code,
-      symbol: symbol,
-      startTime: startDate,
-      endTime: endDate,
-      budget: budget,
-    });
-    return data;
-  }
-
-  const runScriptMutation = useMutation(
-    (code: string) => submitCode(coin, code),
-    {
-      onSuccess: (_data) => {
-        console.log("Run code successful:", _data);
-      },
-      onError: (_err) => {
-        console.log("Run code failed:", _err);
-      },
-    }
+  const runScriptMutation = useMutation((code: string) =>
+    submitCode(coin, code, String(startDate), String(endDate), budget)
   );
 
   return (
