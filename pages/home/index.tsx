@@ -1,11 +1,9 @@
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
-import React, { FC, ReactNode, useEffect, useState } from "react";
+import { Box, Button, Typography } from "@mui/material";
+import React, { FC, ReactNode, useState } from "react";
 import useAccount from "../../stocker-core/sdk/Account/useAccount";
 import { db } from "../../utils/firebase";
 import { useRecoilValue } from "recoil";
 import { recoilUserId } from "../../states";
-import { Account } from "../../stocker-core/sdk/Types/Account";
-import { getAccountTotal } from "../../stocker-core/sdk/Account/getAccountTotal";
 import ProfitInfo from "../../components/Home/ProfitInfo";
 import { TransactionHistory } from "../../components/Home/TransactionHistory";
 import { LoadingIndicator } from "../../components/Common/LoadingIndicator";
