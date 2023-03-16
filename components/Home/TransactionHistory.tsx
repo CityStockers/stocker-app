@@ -14,7 +14,7 @@ import useTransaction from "../../stocker-core/sdk/Transaction/useTransaction";
 import { useRecoilValue } from "recoil";
 import { recoilUserId } from "../../states";
 import { db } from "../../utils/firebase";
-import { convertTime } from "../../utils";
+import { compare, convertTime } from "../../utils";
 import { LoadingIndicator } from "../Common/LoadingIndicator";
 
 type AccountInfoProps = {
@@ -34,7 +34,6 @@ const ProfitInfo = () => {
   if (transactionInfo.error) {
     return <div>error...</div>;
   }
-  console.log(transactionInfo);
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -63,64 +62,66 @@ const ProfitInfo = () => {
           <Typography sx={{ flex: 0.2 }}>Time</Typography>
         </Box>
         {transactionInfo &&
-          transactionInfo.transaction?.transactions.map((item, index) => {
-            if (item.type === "ADD") {
-              return (
-                <Box
-                  key={index}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginY: 1,
-                    borderBottom: "1px solid #DFDFDF",
-                  }}
-                >
-                  <Typography sx={{ flex: 0.2 }}>[{item.type}]</Typography>
-                  <Typography sx={{ flex: 0.2 }}> {item.symbol}</Typography>
-                  <Typography sx={{ flex: 0.2 }}> - </Typography>
-                  <Typography sx={{ flex: 0.2 }}>
-                    {Number(item.price).toFixed(2)}
-                  </Typography>
-                  <Typography sx={{ flex: 0.2 }}>
-                    {convertTime(item.timestamp)}
-                  </Typography>
-                </Box>
-              );
-            } else {
-              return (
-                <Box
-                  key={index}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginY: 1,
-                    borderBottom: "1px solid #DFDFDF",
-                  }}
-                >
-                  <Typography
-                    color={
-                      item.type === "BUY"
-                        ? "#CF3049"
-                        : item.type === "SELL"
-                        ? "#04A56D"
-                        : "#111111"
-                    }
-                    sx={{ flex: 0.2 }}
+          transactionInfo.transaction?.transactions
+            .sort(compare)
+            .map((item, index) => {
+              if (item.type === "ADD") {
+                return (
+                  <Box
+                    key={index}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginY: 1,
+                      borderBottom: "1px solid #DFDFDF",
+                    }}
                   >
-                    [{item.type}]
-                  </Typography>
-                  <Typography sx={{ flex: 0.2 }}> {item.symbol}</Typography>
-                  <Typography sx={{ flex: 0.2 }}>{item.amount} </Typography>
-                  <Typography sx={{ flex: 0.2 }}>
-                    {Number(item.price).toFixed(2)}
-                  </Typography>
-                  <Typography sx={{ flex: 0.2 }}>
-                    {convertTime(item.timestamp)}
-                  </Typography>
-                </Box>
-              );
-            }
-          })}
+                    <Typography sx={{ flex: 0.2 }}>[{item.type}]</Typography>
+                    <Typography sx={{ flex: 0.2 }}> {item.symbol}</Typography>
+                    <Typography sx={{ flex: 0.2 }}> - </Typography>
+                    <Typography sx={{ flex: 0.2 }}>
+                      {Number(item.price).toFixed(2)}
+                    </Typography>
+                    <Typography sx={{ flex: 0.2 }}>
+                      {convertTime(item.timestamp)}
+                    </Typography>
+                  </Box>
+                );
+              } else {
+                return (
+                  <Box
+                    key={index}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginY: 1,
+                      borderBottom: "1px solid #DFDFDF",
+                    }}
+                  >
+                    <Typography
+                      color={
+                        item.type === "BUY"
+                          ? "#CF3049"
+                          : item.type === "SELL"
+                          ? "#04A56D"
+                          : "#111111"
+                      }
+                      sx={{ flex: 0.2 }}
+                    >
+                      [{item.type}]
+                    </Typography>
+                    <Typography sx={{ flex: 0.2 }}> {item.symbol}</Typography>
+                    <Typography sx={{ flex: 0.2 }}>{item.amount} </Typography>
+                    <Typography sx={{ flex: 0.2 }}>
+                      {Number(item.price).toFixed(2)}
+                    </Typography>
+                    <Typography sx={{ flex: 0.2 }}>
+                      {convertTime(item.timestamp)}
+                    </Typography>
+                  </Box>
+                );
+              }
+            })}
 
         {transactionInfo.transaction?.transactions.length === 0 && (
           <Typography color={"#AAAAAA"} sx={{ marginTop: 8 }}>
