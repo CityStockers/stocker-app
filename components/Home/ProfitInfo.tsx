@@ -1,8 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import React, { FC, ReactNode } from "react";
-import Image from "next/image";
 import { useRouter } from "next/router";
-import { Account, Wallet } from "../../stocker-core/sdk/Types/Account";
+import { Account } from "../../stocker-core/sdk/Types/Account";
 import CoinProfit from "./CoinProfit";
 import { parseCoinList } from "../../utils";
 
@@ -11,13 +10,7 @@ type AccountInfoProps = {
   accountInfo: Account | null;
 };
 
-/**
- * 함수 설명
- */
 const ProfitInfo = ({ accountInfo }: AccountInfoProps) => {
-  //   const result = getCoinIcon(code);
-
-  const router = useRouter();
   return (
     <Box
       sx={{
@@ -47,7 +40,7 @@ const ProfitInfo = ({ accountInfo }: AccountInfoProps) => {
           </Box>
         ) : (
           accountInfo.wallets.map((item, index) => {
-            if (index !== 0) {
+            if (index !== 0 && item.amount > 0) {
               return <CoinProfit walletInfo={item} key={index} />;
             }
           })

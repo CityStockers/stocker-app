@@ -1,13 +1,5 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Typography,
-} from "@mui/material";
-import React, { FC, ReactNode } from "react";
-import Image from "next/image";
+import { Box, Typography } from "@mui/material";
+import React, { ReactNode } from "react";
 import { useRouter } from "next/router";
 import { Account } from "../../stocker-core/sdk/Types/Account";
 import useTransaction from "../../stocker-core/sdk/Transaction/useTransaction";
@@ -17,15 +9,10 @@ import { db } from "../../utils/firebase";
 import { compare, convertTime } from "../../utils";
 import { LoadingIndicator } from "../Common/LoadingIndicator";
 
-type AccountInfoProps = {
-  children?: ReactNode;
-  accountInfo: Account | null;
-};
-
-const ProfitInfo = () => {
+export const TransactionHistory = () => {
   const userId = useRecoilValue(recoilUserId);
   const transactionInfo = useTransaction(db, userId);
-  //   const result = getCoinIcon(code);
+
   const router = useRouter();
 
   if (transactionInfo.loading) {
@@ -132,5 +119,3 @@ const ProfitInfo = () => {
     </Box>
   );
 };
-
-export default ProfitInfo;
