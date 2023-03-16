@@ -15,117 +15,15 @@ import { lib, TradeResult } from "../../components/Auto/type";
 import { useMutation } from "react-query";
 import { ScriptResult } from "../../components/Auto/ScriptResult";
 import { submitCode } from "../../api/binanceAPI";
+import { algorithmList } from "../../constant/algorithm";
+import { convertIntervalToMili, INTERVAL } from "../../utils";
 
-type TradeProps = {
-  children?: ReactNode;
-};
-
-const firstcode = `const trader = new Trader();
-
-let yesterdayPrice = { timestamp: 0, openPrice: 0, closePrice: 0, lowPrice: 0, highPrice: 0 };
-let targetBuyPrice: number;
-
-trader.onTimeChange((market, timestamp) => {
-  if (yesterdayPrice.timestamp !== 0) {
-    const todayPrice = market.getQuote(timestamp);
-    targetBuyPrice =
-      todayPrice.openPrice +
-      (yesterdayPrice.highPrice - yesterdayPrice.lowPrice) * 0.25;
-    if (targetBuyPrice <= todayPrice.highPrice && market.getCoin() === 0) {
-      market.buy(
-        Math.trunc(market.getWallet() / targetBuyPrice),
-        targetBuyPrice
-      );
-    }
-  }
-
-  if (market.getCoin() > 0) {
-    market.sell(market.getCoin());
-  }
-
-  yesterdayPrice = market.getQuote(timestamp);
-}, "1d");
-
-export default trader;`;
-
-const secondCode = `
-
-const trader = new Trader();
-
-// Define the parameters
-var period = 5; // The number of bars to calculate the moving average
-var threshold = 0.05; // The percentage above or below the moving average to trigger a trade
-var lotSize = 10; // The number of units to trade
-
-// Initialize the variables
-var ma = 0; // The moving average value
-var sum = 0; // The sum of the prices for the moving average calculation
-var position = 0; // The current position: 1 for long, -1 for short, 0 for none
-var data: number[] = []
-var i = 0;
-// Loop through the price data
-trader.onTimeChange((market, timestamp) => {
-  // Get the current price
-  var price = market.getQuote(timestamp);
-   data.push(price.closePrice)
-  // Update the sum and the moving average
-  if (i >= period) {
-    // Remove the oldest price from the sum
-    sum -= data[i - period];
-  }
-
-  // Add the current price to the sum
-  sum += price.closePrice;
-
-  // Calculate the moving average
-  ma = sum / Math.min(i + 1, period);
-
-  // Check if there is a trading signal
-  if (price.closePrice > ma * (1 + threshold)) {
-    // Buy signal: go long or close short position
-    if (position != 1) {
-      market.buy(lotSize)
-      position = 1;
-    }
-    
-    } else if (price.closePrice < ma * (1 - threshold)) {
-      // Sell signal: go short or close long position
-      
-      if (position != -1) {
-        market.sell(lotSize)
-        position = -1;
-      }
-      
-      } else {
-        // No signal: do nothing
-  }
-i += 1;
-}, "1d");
-
-export default trader;
-
-`;
-
-const thirdCode = `const trader = new Trader();
-
-trader.onTimeChange((market, timestamp) => {
-
-}, "1d");
-
-export default trader;`;
-
-/**
- * 함수 설명
- *
- * @param {any} example 함수가 받는 파라 미터 설명
- * @returns 리턴 설명
- */
-const Auto: FC<TradeProps> = () => {
+const Auto = () => {
   const [coin, setCoin] = useState("");
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
   const [budget, setBudget] = useState("");
-  const [defaultCode, setDefaultCode] = useState(thirdCode);
+  const [defaultCode, setDefaultCode] = useState(2);
   const options = {
     readOnly: false,
     minimap: { enabled: false },
@@ -229,6 +127,19 @@ const Auto: FC<TradeProps> = () => {
             }}
           />
         </Box>
+
+        {startDate && endDate && (
+          <Typography color="#6B6970" fontSize={14}>
+            Interval should be one of the following. <br />
+            {INTERVAL.map((item) => {
+              const time =
+                new Date(endDate).getTime() - new Date(startDate).getTime();
+              if (time / convertIntervalToMili(item) < 1000) {
+                return `${item} `;
+              }
+            })}
+          </Typography>
+        )}
       </Box>
 
       <Box
@@ -243,25 +154,31 @@ const Auto: FC<TradeProps> = () => {
       >
         <Box>
           <Button
+            variant={defaultCode === 2 ? "contained" : "outlined"}
+            sx={{ marginRight: 1 }}
             onClick={() => {
-              setDefaultCode(firstcode);
+              setDefaultCode(2);
             }}
           >
-            LWVA
+            Blank
           </Button>
           <Button
+            variant={defaultCode === 0 ? "contained" : "outlined"}
+            sx={{ marginRight: 1 }}
             onClick={() => {
-              setDefaultCode(secondCode);
+              setDefaultCode(0);
             }}
           >
-            TFA
+            LW Volatility
           </Button>
           <Button
+            variant={defaultCode === 1 ? "contained" : "outlined"}
+            sx={{ marginRight: 1 }}
             onClick={() => {
-              setDefaultCode(thirdCode);
+              setDefaultCode(1);
             }}
           >
-            FREE
+            Trend Following
           </Button>
         </Box>
         <Box
@@ -276,8 +193,8 @@ const Auto: FC<TradeProps> = () => {
             height={400}
             width="100%"
             defaultLanguage="typescript"
-            defaultValue={defaultCode}
-            value={defaultCode}
+            defaultValue={algorithmList[defaultCode]}
+            value={algorithmList[defaultCode]}
             onMount={handleEditorDidMount}
             beforeMount={handleEditorWillMount}
             options={options}
@@ -296,7 +213,7 @@ const Auto: FC<TradeProps> = () => {
                 runScriptMutation.mutate(editorRef.current.getValue());
               }}
             >
-              run
+              RUN
             </Button>
           </Box>
         </Box>
