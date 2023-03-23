@@ -1,8 +1,8 @@
 import { Box, Typography } from "@mui/material";
 import React, { FC, ReactNode } from "react";
 import Image from "next/image";
-import { useRouter } from "next/router";
-import { Wallet } from "../stocker-core/sdk/Types/Account";
+import { Wallet } from "../../stocker-core/sdk/Types/Account";
+import { getCoinInfo } from "../../constant/CoinData";
 
 type CoinInfoProps = {
   children?: ReactNode;
@@ -16,7 +16,6 @@ type CoinInfoProps = {
  */
 const CoinInfo = ({ symbol, wallet, currentPrice }: CoinInfoProps) => {
   //   const result = getCoinIcon(code);
-  const router = useRouter();
   const calculatedProfit = wallet
     ? ((currentPrice - wallet.avgPrice) * wallet.amount).toFixed(2)
     : 0;
@@ -26,6 +25,26 @@ const CoinInfo = ({ symbol, wallet, currentPrice }: CoinInfoProps) => {
       ? (((currentPrice - wallet.avgPrice) / wallet.avgPrice) * 100).toFixed(2)
       : 0
     : 0;
+
+  if (!wallet || wallet.amount === 0) {
+    return (
+      <Box
+        sx={{
+          width: "100%",
+          borderRadius: 4,
+          marginY: 1,
+        }}
+      >
+        <Typography variant="h5" fontWeight={600} marginBottom={2}>
+          {getCoinInfo(symbol)?.name}
+        </Typography>
+        <Typography color={"#AAAAAA"}>
+          You have no Coin in the wallet, Buy the coin!
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box
       sx={{
@@ -34,38 +53,55 @@ const CoinInfo = ({ symbol, wallet, currentPrice }: CoinInfoProps) => {
         marginY: 1,
       }}
     >
-      <Typography variant="h6" fontWeight={600}>
-        {symbol}
+      <Typography variant="h5" fontWeight={600} marginBottom={2}>
+        {getCoinInfo(symbol)?.name}
       </Typography>
       <Box
         sx={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          marginBottom: 2,
         }}
       >
-        <Typography>Owned Coin</Typography>
-        <Typography>{wallet ? wallet.amount : 0}</Typography>
+        <Typography color="gray" fontWeight={400}>
+          Avg Price per coin
+        </Typography>
+        <Typography fontWeight={500}>
+          ${wallet ? Number(wallet.avgPrice).toFixed(2) : 0}
+        </Typography>
       </Box>
       <Box
         sx={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          marginBottom: 2,
         }}
       >
-        <Typography>Average price</Typography>
-        <Typography>${wallet ? wallet.avgPrice.toFixed(2) : 0}</Typography>
+        <Typography color="gray" fontWeight={400}>
+          Owned Coin
+        </Typography>
+        <Typography fontWeight={500}>
+          {wallet ? wallet.amount : 0} coins
+        </Typography>
       </Box>
+
       <Box
         sx={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          marginBottom: 1,
         }}
       >
-        <Typography>Stock Profit</Typography>
-        <Typography color="blue">
+        <Typography color="gray" fontWeight={400}>
+          Stock Profit
+        </Typography>
+        <Typography
+          color={Number(calculatedProfit) < 0 ? "#CF3049" : "#04A56D"}
+          fontWeight={500}
+        >
           {Number(calculatedProfit) > 0 && "+"}
           {calculatedProfit} ({calculatedPercent}
           %)

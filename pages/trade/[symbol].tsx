@@ -1,12 +1,12 @@
 import { Box, Button, Typography, withStyles } from "@mui/material";
 import React, { FC, ReactNode, use, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { getCoinName } from "../../constant/CoinData";
+import { getCoinInfo } from "../../constant/CoinData";
 import Chart from "chart.js/auto";
 import { Line } from "react-chartjs-2";
 import { CategoryScale } from "chart.js";
-import AccountInfo from "../../components/AccountInfo";
-import CoinInfo from "../../components/CoinInfo";
+import AccountInfo from "../../components/Trade/AccountInfo";
+import CoinInfo from "../../components/Trade/CoinInfo";
 import useAccount from "../../stocker-core/sdk/Account/useAccount";
 import { db } from "../../utils/firebase";
 import { recoilUserId } from "../../states";
@@ -113,7 +113,7 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
     <Box>
       <Box sx={{ marginTop: 3 }}>
         <Typography variant="h4" fontWeight={800}>
-          {getCoinName(symbol as string)}
+          {getCoinInfo(symbol as string)?.name}
         </Typography>
         <Box
           sx={{
@@ -144,7 +144,7 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
       <Box
         sx={{
           maxHeight: {
-            xs: 400 * 0.6,
+            xs: 500 * 0.6,
             sm: 600,
           },
         }}

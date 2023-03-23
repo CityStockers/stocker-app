@@ -84,7 +84,7 @@ const BuyCoin = ({
 
           <Box sx={{ display: "flex", flexDirection: "row", marginTop: 1 }}>
             <Typography sx={{ marginRight: 4 }}>Available Saving</Typography>
-            <Typography>${availableSaving}</Typography>
+            <Typography>${availableSaving.toFixed(2)}</Typography>
           </Box>
 
           <TextField

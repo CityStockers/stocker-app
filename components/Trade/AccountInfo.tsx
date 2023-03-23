@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import React, { ReactNode } from "react";
 import { useRouter } from "next/router";
-import { Account } from "../stocker-core/sdk/Types/Account";
+import { Account } from "../../stocker-core/sdk/Types/Account";
 
 type AccountInfoProps = {
   children?: ReactNode;
@@ -18,7 +18,7 @@ const AccountInfo = ({ accountInfo }: AccountInfoProps) => {
         marginY: 1,
       }}
     >
-      <Typography variant="h6" fontWeight={600}>
+      <Typography variant="h5" fontWeight={600} marginBottom={1}>
         Account
       </Typography>
       <Box
@@ -28,8 +28,12 @@ const AccountInfo = ({ accountInfo }: AccountInfoProps) => {
           alignItems: "center",
         }}
       >
-        <Typography>USD Savings</Typography>
-        <Typography>${accountInfo?.wallets[0].amount.toFixed(2)}</Typography>
+        <Typography color="gray" fontWeight={400}>
+          USD Savings
+        </Typography>
+        <Typography fontWeight={500}>
+          ${accountInfo?.wallets[0].amount.toFixed(2)}
+        </Typography>
       </Box>
     </Box>
   );
