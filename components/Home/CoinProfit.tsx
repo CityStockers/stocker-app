@@ -5,7 +5,7 @@ import { Wallet } from "../../stocker-core/sdk/Types/Account";
 import { useQuery } from "react-query";
 import { getPrice } from "../../api/binanceAPI";
 import Image from "next/image";
-import { coinMapping, getCoinInfo } from "../../constant/CoinData";
+import { getCoinInfo } from "../../constant/CoinData";
 
 type WalletInfoProps = {
   children?: ReactNode;
