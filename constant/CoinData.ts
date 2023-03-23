@@ -18,8 +18,8 @@ export const coinList = [
   { symbol: "SOLUSDT", code: "sol", name: "Solana" },
   { symbol: "BNBUSDT", code: "bnb", name: "Binancecoin" },
   { symbol: "LTCUSDT", code: "ltc", name: "Litecoin" },
-  { symbol: "APTUSDT", code: "apt", name: "Aptos" },
-  { symbol: "SHIBUSDT", code: "shib", name: "Shiba Inu" },
+  { symbol: "ADAUSDT", code: "ada", name: "Ada" },
+  { symbol: "DOTUSDT", code: "dot", name: "Polkadot" },
   { symbol: "ENJUSDT", code: "enj", name: "Enjin" },
   { symbol: "MATICUSDT", code: "matic", name: "Polygon" },
 ];

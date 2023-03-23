@@ -63,7 +63,6 @@ const Home: FC<TradeProps> = () => {
               xs: "column",
               sm: "row",
             },
-            marginBottom: 4,
           }}
         >
           <Box
@@ -71,6 +70,7 @@ const Home: FC<TradeProps> = () => {
               width: 280,
               height: 280,
               marginRight: 1,
+              marginBottom: 4,
             }}
           >
             <DoughnutChart account={accountInfo.account} />
@@ -82,7 +82,7 @@ const Home: FC<TradeProps> = () => {
               flexDirection: "column",
               justifyContent: "space-between",
               padding: 3,
-              borderLeft: "1px solid #DFDFDF",
+              borderLeft: { sm: "1px solid #DFDFDF" },
             }}
           >
             <Portforlio account={accountInfo.account} />
@@ -96,7 +96,7 @@ const Home: FC<TradeProps> = () => {
               <Button
                 variant="outlined"
                 onClick={handleClickOpen}
-                sx={{ width: 150 }}
+                sx={{ width: 150, marginTop: 2 }}
               >
                 + Add Money
               </Button>
