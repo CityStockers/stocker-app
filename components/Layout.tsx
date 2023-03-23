@@ -35,7 +35,7 @@ const Layout = ({ children }: LayoutProp) => {
                 sm: 600,
               },
               maxWidth: {
-                xs: 350,
+                xs: 450,
                 sm: 600,
               },
             },
