@@ -65,11 +65,13 @@ export default function NavigationBar(props: Props) {
             </ListItem>
           </Link>
         ))}
-        <ListItem disablePadding>
-          <ListItemButton sx={{ textAlign: "center" }} onClick={handleLogout}>
-            <ListItemText primary={"LogOut"} />
-          </ListItemButton>
-        </ListItem>
+        {route.pathname !== "/" && (
+          <ListItem disablePadding>
+            <ListItemButton sx={{ textAlign: "center" }} onClick={handleLogout}>
+              <ListItemText primary={"LogOut"} />
+            </ListItemButton>
+          </ListItem>
+        )}
       </List>
     </Box>
   );
@@ -108,14 +110,16 @@ export default function NavigationBar(props: Props) {
                 </ListItem>
               </Link>
             ))}
-            <ListItem disablePadding>
-              <ListItemButton
-                sx={{ textAlign: "center" }}
-                onClick={handleLogout}
-              >
-                <ListItemText primary={"LogOut"} />
-              </ListItemButton>
-            </ListItem>
+            {route.pathname !== "/" && (
+              <ListItem disablePadding>
+                <ListItemButton
+                  sx={{ textAlign: "center" }}
+                  onClick={handleLogout}
+                >
+                  <ListItemText primary={"LogOut"} />
+                </ListItemButton>
+              </ListItem>
+            )}
           </Box>
         </Toolbar>
       </AppBar>
