@@ -6,9 +6,10 @@ import {
   Box,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   TextField,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import buy from "../../stocker-core/sdk/Transaction/buy";
 import { db } from "../../utils/firebase";
@@ -42,13 +43,20 @@ const BuyCoin = ({
   const handleClose = () => {
     setOpen(false);
   };
+  const theme = useTheme();
+  const lessThanSmall = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     setBuyError(false);
   }, [buyAmount]);
   return (
     <div>
-      <Dialog fullWidth open={open} onClose={handleClose}>
+      <Dialog
+        fullWidth
+        fullScreen={lessThanSmall}
+        open={open}
+        onClose={handleClose}
+      >
         <DialogTitle variant="h4" fontWeight={600}>
           {title}
         </DialogTitle>

@@ -55,7 +55,7 @@ const CoinInfo = ({ symbol, wallet, currentPrice }: CoinInfoProps) => {
         }}
       >
         <Typography>Average price</Typography>
-        <Typography>${wallet ? wallet.avgPrice : 0}</Typography>
+        <Typography>${wallet ? wallet.avgPrice.toFixed(2) : 0}</Typography>
       </Box>
       <Box
         sx={{

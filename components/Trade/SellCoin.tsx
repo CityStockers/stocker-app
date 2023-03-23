@@ -11,6 +11,8 @@ import {
   DialogContentText,
   DialogTitle,
   TextField,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { db } from "../../utils/firebase";
 import { useRecoilValue } from "recoil";
@@ -43,6 +45,8 @@ const SellCoin = ({
   const handleClose = () => {
     setOpen(false);
   };
+  const theme = useTheme();
+  const lessThanSmall = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     setSellError(false);
@@ -50,7 +54,12 @@ const SellCoin = ({
 
   return (
     <div>
-      <Dialog fullWidth open={open} onClose={handleClose}>
+      <Dialog
+        fullScreen={lessThanSmall}
+        fullWidth
+        open={open}
+        onClose={handleClose}
+      >
         <DialogTitle variant="h4" fontWeight={600}>
           {title}
         </DialogTitle>

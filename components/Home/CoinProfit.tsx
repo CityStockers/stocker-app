@@ -17,7 +17,10 @@ const CoinProfit = ({ walletInfo }: WalletInfoProps) => {
     getPrice(walletInfo.symbol)
   );
 
-  const calculateProfit = (currentPrice: number) => {
+  const calculateProfit = (currentPrice: number | undefined) => {
+    if (!currentPrice) {
+      return 0;
+    }
     const totalBoughtPrice = walletInfo.amount * walletInfo.avgPrice;
     const evaluatedPrice = walletInfo.amount * currentPrice;
     return evaluatedPrice - totalBoughtPrice;
@@ -42,10 +45,10 @@ const CoinProfit = ({ walletInfo }: WalletInfoProps) => {
       <Typography>{walletInfo.symbol}</Typography>
       <Typography
         color={
-          calculateProfit(priceData.data.price) < 0 ? "#CF3049" : "#04A56D"
+          calculateProfit(priceData.data?.price) < 0 ? "#CF3049" : "#04A56D"
         }
       >
-        ${calculateProfit(priceData.data.price).toFixed(2)}
+        ${calculateProfit(priceData.data?.price).toFixed(2)}
       </Typography>
     </Box>
   );

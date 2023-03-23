@@ -1,8 +1,9 @@
 import axios from "axios";
 import { TradeResult } from "../components/Auto/type";
 import { Price } from "../components/Trade/type";
-const baseUrl = "http://localhost:8080";
+const baseUrl = "https://citystocker.shop";
 //http://localhost:8080
+//https://citystocker.shop
 export const getPrice = async (symbol: string): Promise<Price> => {
   const { data } = await axios.get(`${baseUrl}/quote/crypto/${symbol}`, {
     params: { symbol: symbol },

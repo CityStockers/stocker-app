@@ -29,7 +29,7 @@ const AccountInfo = ({ accountInfo }: AccountInfoProps) => {
         }}
       >
         <Typography>USD Savings</Typography>
-        <Typography>${accountInfo?.wallets[0].amount}</Typography>
+        <Typography>${accountInfo?.wallets[0].amount.toFixed(2)}</Typography>
       </Box>
     </Box>
   );
