@@ -3,6 +3,7 @@ import { Account } from "../../stocker-core/sdk/Types/Account";
 import Chart from "chart.js/auto";
 import { Doughnut } from "react-chartjs-2";
 import { CategoryScale } from "chart.js";
+import { getCoinInfo } from "../../constant/CoinData";
 
 type Props = {
   account: Account | null;
@@ -71,12 +72,12 @@ export const DoughnutChart = ({ account }: Props) => {
     account?.wallets.forEach((item, index) => {
       if (index === 0) {
         doughnutData.datasets[0].data.push(Number(item.amount));
-        doughnutData.labels.push(item.symbol);
+        doughnutData.labels.push(String(getCoinInfo(item.symbol)?.name));
       } else if (item.amount > 0) {
         doughnutData.datasets[0].data.push(
           Number(item.avgPrice) * Number(item.amount)
         );
-        doughnutData.labels.push(item.symbol);
+        doughnutData.labels.push(String(getCoinInfo(item.symbol)?.name));
       }
       setChartData(doughnutData);
     });

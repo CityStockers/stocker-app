@@ -8,6 +8,7 @@ import { recoilUserId } from "../../states";
 import { db } from "../../utils/firebase";
 import { compare, convertTime } from "../../utils";
 import { LoadingIndicator } from "../Common/LoadingIndicator";
+import { getCoinInfo } from "../../constant/CoinData";
 
 export const TransactionHistory = () => {
   const userId = useRecoilValue(recoilUserId);
@@ -34,6 +35,8 @@ export const TransactionHistory = () => {
           border: "solid 1px #DFDFDF",
           borderRadius: 2,
           minHeight: 200,
+          maxHeight: 500,
+          overflow: "auto",
         }}
       >
         <Box
@@ -42,11 +45,21 @@ export const TransactionHistory = () => {
             alignItems: "center",
           }}
         >
-          <Typography sx={{ flex: 0.2 }}>Type</Typography>
-          <Typography sx={{ flex: 0.2 }}>Symbol</Typography>
-          <Typography sx={{ flex: 0.2 }}>Amount</Typography>
-          <Typography sx={{ flex: 0.2 }}>Price</Typography>
-          <Typography sx={{ flex: 0.2 }}>Time</Typography>
+          <Typography sx={{ flex: 0.2 }} fontWeight="600">
+            Type
+          </Typography>
+          <Typography sx={{ flex: 0.2 }} fontWeight="600">
+            Symbol
+          </Typography>
+          <Typography sx={{ flex: 0.2 }} fontWeight="600">
+            Amount
+          </Typography>
+          <Typography sx={{ flex: 0.2 }} fontWeight="600">
+            Price
+          </Typography>
+          <Typography sx={{ flex: 0.2 }} fontWeight="600">
+            Time
+          </Typography>
         </Box>
         {transactionInfo &&
           transactionInfo.transaction?.transactions
@@ -63,13 +76,23 @@ export const TransactionHistory = () => {
                       borderBottom: "1px solid #DFDFDF",
                     }}
                   >
-                    <Typography sx={{ flex: 0.2 }}>[{item.type}]</Typography>
-                    <Typography sx={{ flex: 0.2 }}> {item.symbol}</Typography>
-                    <Typography sx={{ flex: 0.2 }}> - </Typography>
-                    <Typography sx={{ flex: 0.2 }}>
+                    <Typography
+                      sx={{ flex: 0.2 }}
+                      color={"#04A56D"}
+                      fontWeight="500"
+                    >
+                      [{item.type}]
+                    </Typography>
+                    <Typography sx={{ flex: 0.2 }} fontSize={14}>
+                      {getCoinInfo(item.symbol)?.name}
+                    </Typography>
+                    <Typography sx={{ flex: 0.2 }} fontSize={14}>
+                      -
+                    </Typography>
+                    <Typography sx={{ flex: 0.2 }} fontSize={14}>
                       {Number(item.price).toFixed(2)}
                     </Typography>
-                    <Typography sx={{ flex: 0.2 }}>
+                    <Typography sx={{ flex: 0.2 }} fontSize={12}>
                       {convertTime(item.timestamp)}
                     </Typography>
                   </Box>
@@ -86,23 +109,22 @@ export const TransactionHistory = () => {
                     }}
                   >
                     <Typography
-                      color={
-                        item.type === "BUY"
-                          ? "#CF3049"
-                          : item.type === "SELL"
-                          ? "#04A56D"
-                          : "#111111"
-                      }
+                      color={item.type === "BUY" ? "#1B76D2" : "#CF3049"}
+                      fontWeight="500"
                       sx={{ flex: 0.2 }}
                     >
                       [{item.type}]
                     </Typography>
-                    <Typography sx={{ flex: 0.2 }}> {item.symbol}</Typography>
-                    <Typography sx={{ flex: 0.2 }}>{item.amount} </Typography>
-                    <Typography sx={{ flex: 0.2 }}>
+                    <Typography sx={{ flex: 0.2 }} fontSize={14}>
+                      {getCoinInfo(item.symbol)?.name}
+                    </Typography>
+                    <Typography sx={{ flex: 0.2 }} fontSize={14}>
+                      {item.amount}
+                    </Typography>
+                    <Typography sx={{ flex: 0.2 }} fontSize={14}>
                       {Number(item.price).toFixed(2)}
                     </Typography>
-                    <Typography sx={{ flex: 0.2 }}>
+                    <Typography sx={{ flex: 0.2 }} fontSize={12}>
                       {convertTime(item.timestamp)}
                     </Typography>
                   </Box>
