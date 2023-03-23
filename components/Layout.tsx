@@ -31,7 +31,7 @@ const Layout = ({ children }: LayoutProp) => {
           ? { width: "100%", height: "80vh" }
           : {
               minWidth: {
-                xs: 300,
+                xs: 350,
                 sm: 600,
               },
               maxWidth: {
