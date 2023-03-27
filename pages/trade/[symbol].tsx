@@ -1,5 +1,5 @@
 import { Box, Button, Typography, withStyles } from "@mui/material";
-import React, { FC, ReactNode, use, useEffect, useState } from "react";
+import React, { FC, ReactNode, use, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { getCoinInfo } from "../../constant/CoinData";
 import Chart from "chart.js/auto";
@@ -35,8 +35,9 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
   const [openBuy, setOpenBuy] = useState(false);
   const [openSell, setOpenSell] = useState(false);
   const [indexOfWallet, setIndexOfWallet] = useState(-1);
+  const ws = useRef<WebSocket | null>(null);
 
-  const priceListDatas = useQueries(
+  useQueries(
     listOfIntervals.map((item) => {
       return {
         queryKey: ["priceList", symbol, item],
@@ -67,19 +68,26 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
   };
 
   useEffect(() => {
-    if (typeof symbol === "string") {
-      let ws = new WebSocket(
-        `wss://stream.binance.com:9443/ws/${symbol.toLowerCase()}@trade`
-      );
-      ws.onmessage = (event) => {
-        let stockObject = JSON.parse(event.data);
-        setPrice(stockObject.p);
-      };
+    if (typeof symbol !== "string") return;
 
-      return () => {
-        ws.close();
-      };
+    if (ws.current) {
+      ws.current.close();
     }
+
+    ws.current = new WebSocket(
+      `wss://stream.binance.com:9443/ws/${symbol.toLowerCase()}@trade`
+    );
+
+    ws.current.onmessage = (event) => {
+      const stockObject = JSON.parse(event.data);
+      setPrice(stockObject.p);
+    };
+
+    return () => {
+      if (ws.current?.readyState === 1) {
+        ws.current.close();
+      }
+    };
   }, [symbol]);
 
   useEffect(() => {
@@ -96,10 +104,10 @@ const TradeSymbol: FC<TradeSymbolProps> = () => {
   }
 
   const data = {
-    labels: parseTimeList(priceListData.data),
+    labels: parseTimeList(priceListData.data).concat("now"),
     datasets: [
       {
-        data: parsePriceList(priceListData.data),
+        data: parsePriceList(priceListData.data).concat(price),
       },
     ],
   };
