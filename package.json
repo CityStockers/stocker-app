@@ -19,6 +19,7 @@
     "@mui/material": "^5.10.9",
     "@mui/x-date-pickers": "^5.0.16",
     "@next/font": "^13.1.2",
+    "@types/websocket": "^1.0.5",
     "axios": "^1.2.2",
     "chart.js": "^4.1.1",
     "dayjs": "^1.11.7",
