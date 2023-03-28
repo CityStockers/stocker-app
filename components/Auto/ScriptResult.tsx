@@ -48,22 +48,106 @@ export const ScriptResult = ({ scriptData, loading }: ScriptResultType) => {
           Result
         </Typography>
         <Box
-          sx={{ marginLeft: 2, cursor: "pointer" }}
+          sx={{
+            marginLeft: 2,
+            cursor: "pointer",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
           onClick={() => setResultSelect("transaction")}
         >
-          Transaction
+          <Typography
+            marginRight={1}
+            fontWeight={resultSelect === "transaction" ? 600 : 400}
+          >
+            Transaction
+          </Typography>
+          {scriptData?.transactions && (
+            <Box
+              sx={{
+                backgroundColor: "#1B76D2",
+                padding: 1,
+                height: 15,
+                borderRadius: 15,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography fontWeight={600} color="white" fontSize={12}>
+                {scriptData?.transactions.length}
+              </Typography>
+            </Box>
+          )}
         </Box>
         <Box
-          sx={{ marginLeft: 2, cursor: "pointer" }}
+          sx={{
+            marginLeft: 2,
+            cursor: "pointer",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
           onClick={() => setResultSelect("log")}
         >
-          Logs
+          <Typography
+            marginRight={1}
+            fontWeight={resultSelect === "log" ? 600 : 400}
+          >
+            Logs
+          </Typography>
+          {scriptData?.logs && (
+            <Box
+              sx={{
+                backgroundColor: "#AAAAAA",
+                padding: 1,
+                height: 15,
+                borderRadius: 15,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography fontWeight={600} color="white" fontSize={12}>
+                {scriptData?.logs.length}
+              </Typography>
+            </Box>
+          )}
         </Box>
         <Box
-          sx={{ marginLeft: 2, cursor: "pointer" }}
+          sx={{
+            marginLeft: 2,
+            cursor: "pointer",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
           onClick={() => setResultSelect("error")}
         >
-          Errors
+          <Typography
+            marginRight={1}
+            fontWeight={resultSelect === "error" ? 600 : 400}
+          >
+            Errors
+          </Typography>
+          {scriptData?.errors && (
+            <Box
+              sx={{
+                backgroundColor: "#CF3049",
+                padding: 1,
+                height: 15,
+                borderRadius: 15,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography fontWeight={600} color="white" fontSize={12}>
+                {scriptData?.errors.length}
+              </Typography>
+            </Box>
+          )}
         </Box>
       </Box>
 

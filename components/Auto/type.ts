@@ -1,6 +1,6 @@
 export const lib = `declare class Market {
-  timestamp: number;
-  history: Transaction[];
+  private timestamp: number;
+  private history: Transaction[];
   private config: MarketConfig;
   private wallet: number;
   private coin: number;
@@ -62,8 +62,8 @@ type Transaction = {
 type TransactionAction = "BUY" | "SELL";`;
 
 export declare class Market {
-  timestamp: number;
-  history: Transaction[];
+  private timestamp: number;
+  private history: Transaction[];
   private config: MarketConfig;
   private wallet: number;
   private coin: number;

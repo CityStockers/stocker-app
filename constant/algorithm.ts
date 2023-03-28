@@ -23,7 +23,9 @@ trader.onTimeChange((market, timestamp) => {
   }
 
   yesterdayPrice = market.getQuote(timestamp);
-}, "1d");
+}, "1d"); // Change the time interval of your own depending on the Duration!
+//Interval Types: ["1m", "3m", "5m", "15m", "30m", "1h", "1d", "1M"] 
+//(m = minute, h = hour, d = day, M = month)
 
 export default trader;`,
   `const trader = new Trader();
@@ -76,14 +78,20 @@ trader.onTimeChange((market, timestamp) => {
         // No signal: do nothing
   }
 i += 1;
-}, "1d");
+}, "1d"); // Change the time interval of your own depending on the Duration!
+//Interval Types: ["1m", "3m", "5m", "15m", "30m", "1h", "1d", "1M"] 
+//(m = minute, h = hour, d = day, M = month)
+
 
 export default trader;`,
   `const trader = new Trader();
 
 trader.onTimeChange((market, timestamp) => {
+  //write your own trading algorithm here!
 
-}, "1d");
+}, "1d"); // Change the time interval of your own depending on the Duration!
+//Interval Types: ["1m", "3m", "5m", "15m", "30m", "1h", "1d", "1M"] 
+//(m = minute, h = hour, d = day, M = month)
 
 export default trader;`,
 ];
