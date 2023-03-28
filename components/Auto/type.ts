@@ -16,7 +16,6 @@ export const lib = `declare class Market {
 }
 
 declare class Trader {
-  market: Market | null;
   timeChangeConfig: {
     handler: TimeChangeHandler;
     interval: IntervalType;
@@ -45,6 +44,7 @@ type Quote = {
 type Account = {
   wallet: number;
   coin: number;
+  total: number;
 };
 
 type TransactionResponse = {
@@ -79,7 +79,6 @@ export declare class Market {
 }
 
 export declare class Trader {
-  market: Market | null;
   timeChangeConfig: {
     handler: TimeChangeHandler;
     interval: IntervalType;
@@ -116,6 +115,7 @@ export type Quote = {
 export type Account = {
   wallet: number;
   coin: number;
+  total: number;
 };
 
 export type TransactionResponse = {

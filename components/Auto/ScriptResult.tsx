@@ -157,7 +157,12 @@ export const ScriptResult = ({ scriptData, loading }: ScriptResultType) => {
             <Typography sx={{ marginRight: 2 }}>
               Wallet Result: ${scriptData.account.wallet.toFixed(2)}
             </Typography>
-            <Typography>Remaining Coin: {scriptData.account.coin}</Typography>
+            <Typography sx={{ marginRight: 2 }}>
+              Remaining Coin: {scriptData.account.coin}
+            </Typography>
+            <Typography>
+              Total Value: {scriptData.account.total.toFixed(2)}
+            </Typography>
           </Box>
           {renderResult(resultSelect)}
         </>

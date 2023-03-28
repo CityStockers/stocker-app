@@ -36,6 +36,7 @@ const Auto = () => {
   function handleEditorDidMount(editor: any) {
     editorRef.current = editor;
   }
+
   function handleEditorWillMount(monaco: Monaco) {
     monaco.editor.getModels().forEach((model) => model.dispose());
 
