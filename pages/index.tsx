@@ -44,29 +44,31 @@ export default function Home() {
   return (
     <Box
       sx={{
-        my: 4,
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-between",
+        justifyContent: "center",
         alignItems: "center",
-        marginTop: 8,
+        height: "80vh",
       }}
     >
       <Typography
         variant="h5"
         component="h1"
+        fontWeight={600}
         gutterBottom
         sx={{ textAlign: "center" }}
       >
-        Stock Simulator
+        Cryptocurrency Market Simulator
       </Typography>
       <Typography
         variant="body1"
         component="p"
         gutterBottom
+        marginBottom={4}
         sx={{ textAlign: "center" }}
       >
-        Try practice trading crypto using Virtual Money without any loss!
+        Practice trading cryptocurrency using Virtual Money without any loss and
+        test your own auto trading algorithm!
       </Typography>
 
       <Button variant="contained" onClick={login}>
