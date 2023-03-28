@@ -72,7 +72,7 @@ const CoinProfit = ({ walletInfo }: WalletInfoProps) => {
             color={"gray"}
             fontWeight="400"
           >
-            {walletInfo.amount} coins
+            {walletInfo.amount} coin(s)
           </Typography>
         </Box>
       </Box>
