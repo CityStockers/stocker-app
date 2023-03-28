@@ -20,8 +20,8 @@ import { convertIntervalToMili, INTERVAL } from "../../utils";
 
 const Auto = () => {
   const [coin, setCoin] = useState("");
-  const [startDate, setStartDate] = useState<string | null>(null);
-  const [endDate, setEndDate] = useState<string | null>(null);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
   const [budget, setBudget] = useState("");
   const [defaultCode, setDefaultCode] = useState(2);
   const options = {
@@ -100,6 +100,7 @@ const Auto = () => {
                 setStartDate(newValue);
               }}
               renderInput={(params) => <TextField {...params} />}
+              maxDate={new Date()}
             />
           </LocalizationProvider>
         </Box>
@@ -112,6 +113,7 @@ const Auto = () => {
                 setEndDate(newValue);
               }}
               renderInput={(params) => <TextField {...params} />}
+              maxDate={new Date()}
             />
           </LocalizationProvider>
         </Box>
