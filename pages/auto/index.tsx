@@ -23,12 +23,17 @@ const Auto = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [budget, setBudget] = useState("");
+  const [error, setError] = useState(false);
   const [defaultCode, setDefaultCode] = useState(2);
   const options = {
     readOnly: false,
     minimap: { enabled: false },
   };
   const editorRef = useRef<any>(null);
+
+  useEffect(() => {
+    setError(false);
+  }, [coin, startDate, endDate, budget]);
 
   const handleChange = (event: SelectChangeEvent) => {
     setCoin(event.target.value as string);
@@ -143,6 +148,12 @@ const Auto = () => {
             })}
           </Typography>
         )}
+
+        {error && (
+          <Typography color="red" fontSize={14} marginTop={1}>
+            All of the fields are required to run the trade.
+          </Typography>
+        )}
       </Box>
 
       <Box
@@ -213,7 +224,11 @@ const Auto = () => {
           >
             <Button
               onClick={() => {
-                runScriptMutation.mutate(editorRef.current.getValue());
+                if (coin && startDate && endDate && budget) {
+                  runScriptMutation.mutate(editorRef.current.getValue());
+                } else {
+                  setError(true);
+                }
               }}
             >
               RUN

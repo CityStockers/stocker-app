@@ -46,43 +46,13 @@ export const TransactionHistory = () => {
             .map((item, index) => {
               if (item.type === "ADD") {
                 return (
-                  // <Box
-                  //   key={index}
-                  //   sx={{
-                  //     display: "flex",
-                  //     alignItems: "center",
-                  //     marginY: 1,
-                  //     borderBottom: "1px solid #DFDFDF",
-                  //   }}
-                  // >
-                  //   <Typography
-                  //     sx={{ flex: 0.2 }}
-                  //     color={"#04A56D"}
-                  //     fontWeight="500"
-                  //   >
-                  //     [{item.type}]
-                  //   </Typography>
-                  //   <Typography sx={{ flex: 0.2 }} fontSize={14}>
-                  //     {getCoinInfo(item.symbol)?.name}
-                  //   </Typography>
-                  //   <Typography sx={{ flex: 0.2 }} fontSize={14}>
-                  //     -
-                  //   </Typography>
-                  //   <Typography sx={{ flex: 0.2 }} fontSize={14}>
-                  //     {Number(item.price).toFixed(2)}
-                  //   </Typography>
-                  //   <Typography sx={{ flex: 0.2 }} fontSize={12}>
-                  //     {convertTime(item.timestamp)}
-                  //   </Typography>
-                  // </Box>
-
                   <Box
                     key={index}
                     sx={{
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
-                      marginBottom: 1,
+                      paddingY: 1,
                       borderBottom: "1px solid #DFDFDF",
                     }}
                   >
@@ -154,7 +124,7 @@ export const TransactionHistory = () => {
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
-                      paddingBottom: 1,
+                      paddingY: 1,
                       borderBottom: "1px solid #DFDFDF",
                     }}
                   >
