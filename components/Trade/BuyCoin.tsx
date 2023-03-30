@@ -68,7 +68,7 @@ const BuyCoin = ({
             }}
           >
             <Typography variant="h6" fontWeight={600} sx={{ marginRight: 1 }}>
-              {Math.round(price).toFixed(2)}
+              {Number(price).toFixed(2)}
             </Typography>
             <Typography
               variant="body1"
@@ -93,6 +93,9 @@ const BuyCoin = ({
             id="name"
             label="Amount of coin to buy"
             type="number"
+            InputProps={{
+              inputProps: { min: 0 },
+            }}
             variant="standard"
             value={buyAmount}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,7 +110,7 @@ const BuyCoin = ({
           </Box>
           {buyError && (
             <Typography color="red" fontSize={12}>
-              Not Enough Savings to Buy!
+              Invalid Buy Amount!
             </Typography>
           )}
         </DialogContent>
@@ -115,7 +118,11 @@ const BuyCoin = ({
           <Button onClick={handleClose}>Cancel</Button>
           <Button
             onClick={() => {
-              if (availableSaving < Number(buyAmount) * price) {
+              if (
+                availableSaving < Number(buyAmount) * price ||
+                Number(buyAmount) <= 0 ||
+                Number.isNaN(Number(buyAmount))
+              ) {
                 setBuyError(true);
               } else {
                 buy(db, userId, title, Number(buyAmount), price);

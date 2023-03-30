@@ -71,7 +71,7 @@ const SellCoin = ({
             }}
           >
             <Typography variant="h6" fontWeight={600} sx={{ marginRight: 1 }}>
-              {Math.round(price).toFixed(2)}
+              {Number(price).toFixed(2)}
             </Typography>
             <Typography
               variant="h6"
@@ -97,6 +97,9 @@ const SellCoin = ({
             label="Amount of coin to SELL"
             type="number"
             variant="standard"
+            InputProps={{
+              inputProps: { min: 0 },
+            }}
             value={sellAmount}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
               setSellAmount(event.target.value);
@@ -110,7 +113,7 @@ const SellCoin = ({
           </Box>
           {sellError && (
             <Typography color="red" fontSize={12}>
-              Not Enough Coins to Sell!
+              Invalid Sell Amount!
             </Typography>
           )}
         </DialogContent>
@@ -118,7 +121,11 @@ const SellCoin = ({
           <Button onClick={handleClose}>Cancel</Button>
           <Button
             onClick={() => {
-              if (availableCoin < Number(sellAmount)) {
+              if (
+                availableCoin < Number(sellAmount) ||
+                Number(sellAmount) <= 0 ||
+                Number.isNaN(Number(sellAmount))
+              ) {
                 setSellError(true);
               } else {
                 sell(db, userId, title, Number(sellAmount), price);
